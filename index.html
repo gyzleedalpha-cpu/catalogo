@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catálogo</title>
+<style>
+  :root {
+    --bg: #0b0f17;
+    --card: #121826;
+    --card-2: #1a2234;
+    --border: #232e45;
+    --text: #eef2f9;
+    --muted: #93a0b8;
+    --accent: #2aabee;      /* azul Telegram */
+    --accent-2: #1e96d1;
+    --gold: #f5c451;
+    --radius: 18px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: radial-gradient(1200px 600px at 70% -10%, #16233d 0%, var(--bg) 55%);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 18px 24px; max-width: 1150px; margin: 0 auto;
+  }
+  .logo { font-weight: 800; font-size: 1.15rem; letter-spacing: .5px; }
+  .logo span { color: var(--accent); }
+  .header-tg {
+    display: inline-flex; align-items: center; gap: 8px;
+    color: var(--accent); text-decoration: none; font-weight: 600; font-size: .9rem;
+    border: 1px solid var(--border); padding: 8px 14px; border-radius: 999px;
+    transition: background .2s;
+  }
+  .header-tg:hover { background: rgba(42,171,238,.1); }
+
+  .hero { text-align: center; max-width: 720px; margin: 26px auto 10px; padding: 0 24px; }
+  .hero h1 { font-size: 2.3rem; font-weight: 800; line-height: 1.2; }
+  .hero h1 em { font-style: normal; color: var(--accent); }
+  .hero p { color: var(--muted); margin-top: 12px; line-height: 1.6; }
+
+  .quick-nav {
+    display: flex; gap: 9px; flex-wrap: wrap; justify-content: center;
+    max-width: 1000px; margin: 26px auto 0; padding: 0 24px;
+  }
+  .quick-nav a {
+    color: #c9d4e8; text-decoration: none; font-size: .82rem; font-weight: 600;
+    background: var(--card); border: 1px solid var(--border);
+    padding: 7px 14px; border-radius: 999px; transition: all .2s;
+  }
+  .quick-nav a:hover { border-color: var(--accent); color: var(--accent); }
+
+  .catalog {
+    max-width: 1150px; margin: 40px auto 60px; padding: 0 24px;
+    display: flex; flex-direction: column; gap: 70px;
+  }
+
+  /* ---------- FILA DE PRODUCTO (escalera) ---------- */
+  .product {
+    display: grid; grid-template-columns: 1.05fr .95fr; gap: 38px; align-items: center;
+  }
+  .product.reverse .gallery { order: 2; }
+  .product.reverse .info { order: 1; }
+  @media (max-width: 860px) {
+    .product, .product.reverse { grid-template-columns: 1fr; gap: 22px; }
+    .product.reverse .gallery { order: 0; }
+    .product.reverse .info { order: 1; }
+    .catalog { gap: 55px; }
+    .hero h1 { font-size: 1.7rem; }
+  }
+
+  /* ---------- GALERÍA ---------- */
+  .gallery {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); overflow: hidden;
+  }
+  .stage {
+    position: relative; aspect-ratio: 4 / 3; background: #000;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+    touch-action: pan-y;
+  }
+  .stage img, .stage video, .stage iframe {
+    width: 100%; height: 100%; object-fit: contain; border: 0; display: block;
+  }
+  .nav-btn {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 40px; height: 40px; border-radius: 50%;
+    background: rgba(10,14,22,.65); color: #fff; border: 1px solid rgba(255,255,255,.15);
+    font-size: 1.15rem; cursor: pointer; z-index: 5; backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+  }
+  .nav-btn:hover { background: rgba(42,171,238,.8); }
+  .nav-prev { left: 10px; }
+  .nav-next { right: 10px; }
+  .counter {
+    position: absolute; bottom: 10px; right: 10px; z-index: 5;
+    background: rgba(10,14,22,.7); padding: 3px 11px; border-radius: 999px;
+    font-size: .78rem; color: #dbe4f3; backdrop-filter: blur(4px);
+  }
+  .media-tag {
+    position: absolute; top: 10px; left: 10px; z-index: 5;
+    background: rgba(10,14,22,.7); padding: 3px 11px; border-radius: 999px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .5px;
+    color: var(--accent); text-transform: uppercase; backdrop-filter: blur(4px);
+  }
+  .thumbs {
+    display: flex; gap: 9px; padding: 12px; overflow-x: auto;
+    background: var(--card-2); scrollbar-width: thin;
+  }
+  .thumb {
+    position: relative; flex: 0 0 76px; height: 56px; border-radius: 9px;
+    overflow: hidden; cursor: pointer; border: 2px solid transparent;
+    background: #000; opacity: .6; transition: opacity .2s, border-color .2s;
+  }
+  .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+  .thumb.active { border-color: var(--accent); opacity: 1; }
+  .thumb:hover { opacity: 1; }
+  .thumb .play-ico {
+    position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    background: rgba(0,0,0,.35); color: #fff; font-size: 1rem;
+  }
+
+  /* ---------- INFO ---------- */
+  .info { display: flex; flex-direction: column; gap: 14px; }
+  .badge {
+    align-self: flex-start; background: rgba(245,196,81,.12); color: var(--gold);
+    border: 1px solid rgba(245,196,81,.35);
+    padding: 4px 13px; border-radius: 999px; font-size: .75rem; font-weight: 700;
+    letter-spacing: .6px; text-transform: uppercase;
+  }
+  .info h2 { font-size: 1.65rem; line-height: 1.25; font-weight: 800; }
+  .desc { color: var(--muted); line-height: 1.65; font-size: .95rem; }
+
+  .price-box { display: flex; align-items: baseline; gap: 11px; flex-wrap: wrap; }
+  .price { font-size: 1.9rem; font-weight: 800; color: #fff; }
+  .price-old { font-size: 1.05rem; color: var(--muted); text-decoration: line-through; }
+  .price-off {
+    background: rgba(46,204,113,.15); color: #2ecc71; font-weight: 700;
+    font-size: .78rem; padding: 3px 10px; border-radius: 999px;
+  }
+
+  .features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .features li {
+    display: flex; gap: 9px; align-items: flex-start; color: #c9d4e8; font-size: .92rem;
+  }
+  .features li::before {
+    content: "✓"; color: var(--accent); font-weight: 800; flex: 0 0 auto; margin-top: 1px;
+  }
+
+  .btn-tg {
+    display: flex; align-items: center; justify-content: center; gap: 11px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    color: #fff; text-decoration: none; font-weight: 800; font-size: 1.02rem;
+    padding: 14px 20px; border-radius: 13px; margin-top: 6px;
+    box-shadow: 0 8px 24px rgba(42,171,238,.3);
+    transition: transform .15s, box-shadow .2s;
+  }
+  .btn-tg:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(42,171,238,.45); }
+  .btn-tg svg { width: 22px; height: 22px; flex: 0 0 auto; }
+  .buy-note { text-align: center; color: var(--muted); font-size: .8rem; }
+
+  .divider {
+    height: 1px; border: 0; margin: 0;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  .trust-bar {
+    display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;
+    max-width: 1150px; margin: 0 auto; padding: 0 24px 10px;
+  }
+  .trust-bar div { text-align: center; font-size: .8rem; color: var(--muted); }
+  .trust-bar b { display: block; color: var(--text); font-size: 1rem; margin-bottom: 2px; }
+
+  footer { text-align: center; color: #5b6880; font-size: .8rem; padding: 30px 20px 40px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo" id="brandName"></div>
+  <a class="header-tg" id="headerTg" href="#" target="_blank" rel="noopener">✈️ Contactar</a>
+</header>
+
+<section class="hero">
+  <h1 id="heroTitle"></h1>
+  <p id="heroSub"></p>
+</section>
+
+<nav class="quick-nav" id="quickNav"></nav>
+
+<main class="catalog" id="catalog"></main>
+
+<div class="trust-bar">
+  <div><b>⚡ Inmediato</b>Entrega automática</div>
+  <div><b>🔒 Seguro</b>Compra vía Telegram</div>
+  <div><b>💬 Soporte</b>Atención directa</div>
+</div>
+
+<footer id="footerText"></footer>
+
+<script>
+/* ============================================================
+   ⚙️ CONFIGURACIÓN — EDITA SOLO ESTA PARTE
+   ============================================================ */
+const CONFIG = {
+  marca: "Mi<span>Tienda</span>",          // Nombre arriba a la izquierda
+  botTelegram: "https://t.me/TU_BOT_AQUI", // 👈 enlace de tu bot de Telegram
+  tituloHero: "Catálogo <em>oficial</em>",
+  subtituloHero: "Elige tu producto, toca comprar y el bot de Telegram te atiende al instante.",
+  textoBoton: "Comprar por Telegram",
+  notaCompra: "El botón abre el bot y completas tu compra ahí mismo.",
+
+  /* 🛒 PRODUCTOS: copia y pega un bloque { ... } para agregar más.
+     Se acomodan solos en escalera (uno a la izquierda, otro a la derecha).
+
+     📸 En "media" agrega TODAS las fotos o videos que quieras (no hay
+        límite: 2, 5, 10, 20...). Solo agrega una línea más por archivo:
+       - Imagen:      { tipo: "imagen",  src: "img/foto1.jpg" }
+       - Video (mp4): { tipo: "video",   src: "video/demo.mp4" }
+       - YouTube:     { tipo: "youtube", src: "https://www.youtube.com/embed/VIDEO_ID" }
+       Las miniaturas de abajo se deslizan solas si son muchas.
+
+     🔗 "linkBot" (opcional): enlace propio de ese producto. Si lo dejas
+        vacío "" se usa el botTelegram general. Sirve para deep links tipo
+        https://t.me/TU_BOT?start=producto1                                 */
+  productos: [
+    {
+      badge: "🔥 Más vendido",
+      nombre: "Producto 1",
+      precio: "$8 USD",
+      precioAnterior: "$15 USD",   // deja "" para ocultar
+      descuento: "-45%",           // deja "" para ocultar
+      descripcion: "Descripción del producto 1. Explica qué incluye, cómo se entrega y por qué vale la pena.",
+      caracteristicas: ["Entrega automática e inmediata", "Garantía de reposición", "Soporte 24/7 por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p1/foto1.jpg" },
+        { tipo: "imagen", src: "img/p1/foto2.jpg" },
+        { tipo: "imagen", src: "img/p1/foto3.jpg" },
+        { tipo: "imagen", src: "img/p1/foto4.jpg" },
+        { tipo: "imagen", src: "img/p1/foto5.jpg" },
+        { tipo: "imagen", src: "img/p1/foto6.jpg" },
+        { tipo: "imagen", src: "img/p1/foto7.jpg" },
+        { tipo: "imagen", src: "img/p1/foto8.jpg" },
+        { tipo: "imagen", src: "img/p1/foto9.jpg" }
+      ]
+    },
+    {
+      badge: "⭐ Recomendado",
+      nombre: "Producto 2",
+      precio: "$15 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 2.",
+      caracteristicas: ["Activación al momento", "Pago seguro dentro del bot"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p2/foto1.jpg" },
+        { tipo: "video",  src: "img/p2/video1.mp4" },
+        { tipo: "video",  src: "img/p2/video2.mp4" },
+        { tipo: "video",  src: "img/p2/video3.mp4" },
+        { tipo: "video",  src: "img/p2/video4.mp4" }
+      ]
+    },
+    {
+      badge: "💎 Premium",
+      nombre: "Producto 3",
+      precio: "$25 USD",
+      precioAnterior: "$40 USD",
+      descuento: "-38%",
+      descripcion: "Descripción del producto 3.",
+      caracteristicas: ["Calidad garantizada", "Reposición sin costo", "Atención prioritaria"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p3/foto1.jpg" },
+        { tipo: "imagen", src: "img/p3/foto2.jpg" },
+        { tipo: "imagen", src: "img/p3/foto3.jpg" },
+        { tipo: "imagen", src: "img/p3/foto4.jpg" },
+        { tipo: "imagen", src: "img/p3/foto5.jpg" },
+        { tipo: "imagen", src: "img/p3/foto6.jpg" },
+        { tipo: "imagen", src: "img/p3/foto7.jpg" },
+        { tipo: "imagen", src: "img/p3/foto8.jpg" },
+        { tipo: "imagen", src: "img/p3/foto9.jpg" },
+        { tipo: "imagen", src: "img/p3/foto10.jpg" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 4",
+      precio: "$10 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 4.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p4/foto1.jpg" },
+        { tipo: "imagen", src: "img/p4/foto2.jpg" },
+        { tipo: "imagen", src: "img/p4/foto3.jpg" },
+        { tipo: "imagen", src: "img/p4/foto4.jpg" },
+        { tipo: "imagen", src: "img/p4/foto5.jpg" },
+        { tipo: "video",  src: "img/p4/video1.mp4" },
+        { tipo: "video",  src: "img/p4/video2.mp4" },
+        { tipo: "video",  src: "img/p4/video3.mp4" },
+        { tipo: "video",  src: "img/p4/video4.mp4" },
+        { tipo: "video",  src: "img/p4/video5.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 5",
+      precio: "$12 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 5.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p5/foto1.jpg" },
+        { tipo: "video",  src: "img/p5/video1.mp4" },
+        { tipo: "video",  src: "img/p5/video2.mp4" },
+        { tipo: "video",  src: "img/p5/video3.mp4" },
+        { tipo: "video",  src: "img/p5/video4.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 6",
+      precio: "$18 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 6.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p6/foto1.jpg" },
+        { tipo: "imagen", src: "img/p6/foto2.jpg" },
+        { tipo: "video",  src: "img/p6/video1.mp4" },
+        { tipo: "video",  src: "img/p6/video2.mp4" },
+        { tipo: "video",  src: "img/p6/video3.mp4" },
+        { tipo: "video",  src: "img/p6/video4.mp4" },
+        { tipo: "video",  src: "img/p6/video5.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 7",
+      precio: "$20 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 7.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p7/foto1.jpg" },
+        { tipo: "video",  src: "img/p7/video1.mp4" },
+        { tipo: "video",  src: "img/p7/video2.mp4" },
+        { tipo: "video",  src: "img/p7/video3.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 8",
+      precio: "$22 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 8.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p8/foto1.jpg" },
+        { tipo: "imagen", src: "img/p8/foto2.jpg" },
+        { tipo: "video",  src: "img/p8/video1.mp4" },
+        { tipo: "video",  src: "img/p8/video2.mp4" },
+        { tipo: "video",  src: "img/p8/video3.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 9",
+      precio: "$25 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 9.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p9/foto1.jpg" },
+        { tipo: "video",  src: "img/p9/video1.mp4" },
+        { tipo: "video",  src: "img/p9/video2.mp4" },
+        { tipo: "video",  src: "img/p9/video3.mp4" },
+        { tipo: "video",  src: "img/p9/video4.mp4" },
+        { tipo: "video",  src: "img/p9/video5.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 10",
+      precio: "$28 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 10.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p10/foto1.jpg" },
+        { tipo: "imagen", src: "img/p10/foto2.jpg" },
+        { tipo: "video",  src: "img/p10/video1.mp4" },
+        { tipo: "video",  src: "img/p10/video2.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 11",
+      precio: "$30 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 11.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p11/foto1.jpg" },
+        { tipo: "imagen", src: "img/p11/foto2.jpg" },
+        { tipo: "imagen", src: "img/p11/foto3.jpg" },
+        { tipo: "video",  src: "img/p11/video1.mp4" },
+        { tipo: "video",  src: "img/p11/video2.mp4" },
+        { tipo: "video",  src: "img/p11/video3.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 12",
+      precio: "$35 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 12.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p12/foto1.jpg" },
+        { tipo: "imagen", src: "img/p12/foto2.jpg" },
+        { tipo: "video",  src: "img/p12/video1.mp4" },
+        { tipo: "video",  src: "img/p12/video2.mp4" },
+        { tipo: "video",  src: "img/p12/video3.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 13",
+      precio: "$40 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 13.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p13/foto1.jpg" },
+        { tipo: "imagen", src: "img/p13/foto2.jpg" },
+        { tipo: "imagen", src: "img/p13/foto3.jpg" },
+        { tipo: "imagen", src: "img/p13/foto4.jpg" },
+        { tipo: "imagen", src: "img/p13/foto5.jpg" },
+        { tipo: "imagen", src: "img/p13/foto6.jpg" },
+        { tipo: "imagen", src: "img/p13/foto7.jpg" },
+        { tipo: "video",  src: "img/p13/video1.mp4" },
+        { tipo: "video",  src: "img/p13/video2.mp4" },
+        { tipo: "video",  src: "img/p13/video3.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 14",
+      precio: "$45 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 14.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p14/foto1.jpg" },
+        { tipo: "imagen", src: "img/p14/foto2.jpg" },
+        { tipo: "video",  src: "img/p14/video1.mp4" },
+        { tipo: "video",  src: "img/p14/video2.mp4" }
+      ]
+    },
+    {
+      badge: "",
+      nombre: "Producto 15",
+      precio: "$50 USD",
+      precioAnterior: "",
+      descuento: "",
+      descripcion: "Descripción del producto 15.",
+      caracteristicas: ["Entrega inmediata", "Soporte por Telegram"],
+      linkBot: "",
+      media: [
+        { tipo: "imagen", src: "img/p15/foto1.jpg" },
+        { tipo: "imagen", src: "img/p15/foto2.jpg" },
+        { tipo: "imagen", src: "img/p15/foto3.jpg" },
+        { tipo: "video",  src: "img/p15/video1.mp4" },
+        { tipo: "video",  src: "img/p15/video2.mp4" }
+      ]
+    }
+  ]
+};
+/* ============================================================
+   FIN DE LA CONFIGURACIÓN — no hace falta tocar nada más abajo
+   ============================================================ */
+
+const TG_SVG = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>`;
+
+document.getElementById("brandName").innerHTML = CONFIG.marca;
+document.getElementById("headerTg").href = CONFIG.botTelegram;
+document.getElementById("heroTitle").innerHTML = CONFIG.tituloHero;
+document.getElementById("heroSub").textContent = CONFIG.subtituloHero;
+document.getElementById("footerText").textContent = `© ${new Date().getFullYear()} — Compra segura vía Telegram`;
+
+const catalog = document.getElementById("catalog");
+
+document.getElementById("quickNav").innerHTML = CONFIG.productos
+  .map((p, i) => `<a href="#producto-${i + 1}">${p.nombre}</a>`)
+  .join("");
+
+CONFIG.productos.forEach((p, pi) => {
+  const row = document.createElement("article");
+  row.className = "product" + (pi % 2 === 1 ? " reverse" : "");
+  row.id = `producto-${pi + 1}`;
+  row.style.scrollMarginTop = "20px";
+
+  const link = p.linkBot && p.linkBot.trim() ? p.linkBot : CONFIG.botTelegram;
+
+  row.innerHTML = `
+    <div class="gallery">
+      <div class="stage">
+        <button class="nav-btn nav-prev" aria-label="Anterior">‹</button>
+        <button class="nav-btn nav-next" aria-label="Siguiente">›</button>
+        <div class="media-tag"></div>
+        <div class="counter"></div>
+      </div>
+      <div class="thumbs"></div>
+    </div>
+    <div class="info">
+      ${p.badge ? `<span class="badge">${p.badge}</span>` : ""}
+      <h2>${p.nombre}</h2>
+      <div class="price-box">
+        <span class="price">${p.precio}</span>
+        ${p.precioAnterior ? `<span class="price-old">${p.precioAnterior}</span>` : ""}
+        ${p.descuento ? `<span class="price-off">${p.descuento}</span>` : ""}
+      </div>
+      <p class="desc">${p.descripcion}</p>
+      <ul class="features">${(p.caracteristicas || []).map(f => `<li>${f}</li>`).join("")}</ul>
+      <a class="btn-tg" href="${link}" target="_blank" rel="noopener">${TG_SVG}<span>${CONFIG.textoBoton}</span></a>
+      <div class="buy-note">${CONFIG.notaCompra}</div>
+    </div>
+  `;
+  catalog.appendChild(row);
+  if (pi < CONFIG.productos.length - 1) {
+    const hr = document.createElement("hr");
+    hr.className = "divider";
+    catalog.appendChild(hr);
+  }
+
+  initGallery(row, p);
+});
+
+function initGallery(row, p) {
+  const stage = row.querySelector(".stage");
+  const thumbsBox = row.querySelector(".thumbs");
+  const tag = row.querySelector(".media-tag");
+  const counter = row.querySelector(".counter");
+  let idx = 0, currentEl = null;
+
+  thumbsBox.innerHTML = p.media.map((m, i) => {
+    let inner;
+    if (m.tipo === "imagen") inner = `<img src="${m.src}" alt="" loading="lazy">`;
+    else if (m.tipo === "video") inner = `<video src="${m.src}" muted preload="metadata"></video><div class="play-ico">▶</div>`;
+    else inner = `<div class="play-ico" style="background:#1a2234">▶</div>`;
+    return `<div class="thumb" data-i="${i}">${inner}</div>`;
+  }).join("");
+  const thumbs = [...thumbsBox.querySelectorAll(".thumb")];
+  thumbs.forEach(t => t.addEventListener("click", () => show(+t.dataset.i)));
+
+  function show(i) {
+    const n = p.media.length;
+    idx = ((i % n) + n) % n;
+    const m = p.media[idx];
+
+    if (currentEl) currentEl.remove();
+
+    if (m.tipo === "imagen") {
+      currentEl = document.createElement("img");
+      currentEl.src = m.src;
+      currentEl.alt = p.nombre;
+      tag.textContent = "📷 Foto";
+    } else if (m.tipo === "video") {
+      currentEl = document.createElement("video");
+      currentEl.src = m.src;
+      currentEl.controls = true;
+      currentEl.playsInline = true;
+      tag.textContent = "🎬 Video";
+    } else {
+      currentEl = document.createElement("iframe");
+      currentEl.src = m.src;
+      currentEl.allow = "accelerometer; autoplay; encrypted-media; picture-in-picture";
+      currentEl.allowFullscreen = true;
+      tag.textContent = "🎬 Video";
+    }
+    stage.appendChild(currentEl);
+    counter.textContent = `${idx + 1} / ${n}`;
+    thumbs.forEach((t, k) => t.classList.toggle("active", k === idx));
+  }
+
+  row.querySelector(".nav-prev").addEventListener("click", () => show(idx - 1));
+  row.querySelector(".nav-next").addEventListener("click", () => show(idx + 1));
+
+  let touchX = null;
+  stage.addEventListener("touchstart", e => { touchX = e.touches[0].clientX; }, { passive: true });
+  stage.addEventListener("touchend", e => {
+    if (touchX === null) return;
+    const dx = e.changedTouches[0].clientX - touchX;
+    if (Math.abs(dx) > 45) show(idx + (dx < 0 ? 1 : -1));
+    touchX = null;
+  }, { passive: true });
+
+  show(0);
+}
+</script>
+</body>
+</html>
