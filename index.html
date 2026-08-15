@@ -282,6 +282,11 @@ const media = (p, nFotos, nVideos) => [
 
 const F_INMEDIATA = ["Entrega inmediata", "Soporte por Telegram"];
 
+/* TonyExclusive: el argumento de venta no es la cantidad sino que el
+   material vive fuera de Telegram, asi que el acceso sobrevive a que se
+   caiga el grupo. Por eso encabeza la lista. */
+const F_EXCLUSIVE = ["Alojado fuera de Telegram", "Garantía de por vida", "Pago único, sin mensualidades"];
+
 const SECTIONS = [
   {
     id: "catalogo", titulo: "MX Filtradas",
@@ -320,6 +325,28 @@ const SECTIONS = [
       { nombre: "OmeTV", precio: "", linkBot: "",
         descripcion: "Descripción del producto 8.", caracteristicas: F_INMEDIATA,
         media: media("p8", 0, 4) }
+    ]
+  },
+  {
+    id: "tonyexclusive", titulo: "TonyExclusive",
+    kicker: "Contenido exclusivo alojado fuera de Telegram • Acceso de por vida • Un solo pago",
+    productos: [
+      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+        descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
+        caracteristicas: F_EXCLUSIVE,
+        media: media("p13", 0, 0) },
+      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+        descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
+        caracteristicas: F_EXCLUSIVE,
+        media: media("p14", 0, 0) },
+      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+        descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
+        caracteristicas: F_EXCLUSIVE,
+        media: media("p15", 0, 0) },
+      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+        descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
+        caracteristicas: F_EXCLUSIVE,
+        media: media("p16", 0, 0) }
     ]
   },
   {
@@ -362,6 +389,7 @@ function mediaLabel(media) {
   const parts = [];
   if (imgs) parts.push(imgs + (imgs === 1 ? " foto" : " fotos"));
   if (vids) parts.push(vids + (vids === 1 ? " video" : " videos"));
+  if (!parts.length) return "";
   return "🖼 " + parts.join(" · ");
 }
 
