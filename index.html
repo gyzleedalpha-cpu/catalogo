@@ -2,282 +2,755 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>TonyShop — Catálogo oficial</title>
-<meta name="description" content="Catálogo oficial. Elige tu plaza, toca comprar y el bot de Telegram te atiende al instante.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0a0908">
+<title>TonyShop — Acceso inmediato por Telegram</title>
+<meta name="description" content="Elige, paga en Telegram y el bot te da el acceso al momento. 16 accesos en 4 líneas. Sin esperas, sin mensualidades en TonyExclusive.">
+<link rel="icon" type="image/svg+xml" href="img/marca/icon.svg">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="img/marca/icon-32.png">
+<link rel="apple-touch-icon" sizes="180x180" href="img/marca/icon-180.png">
+<link rel="canonical" href="https://packsmx.com/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TonyShop">
+<meta property="og:url" content="https://packsmx.com/">
+<meta property="og:title" content="TonyShop — Acceso inmediato por Telegram">
+<meta property="og:description" content="Elige, paga en Telegram y el bot te da el acceso al momento.">
+<meta property="og:locale" content="es_MX">
+<meta property="og:image" content="https://packsmx.com/img/marca/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="TonyShop — acceso inmediato por Telegram">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TonyShop — Acceso inmediato por Telegram">
+<meta name="twitter:description" content="Elige, paga en Telegram y el bot te da el acceso al momento.">
+<meta name="twitter:image" content="https://packsmx.com/img/marca/og.jpg">
+<meta name="robots" content="index,follow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+/* ============================================================
+   TONYSHOP — hoja única.
+
+   Criterio de color: un solo acento. El oro se usa para lo que
+   se toca (CTA, precio, dato) y para nada más. Todo lo demás es
+   tinta y papel. El amarillo #ffd400 anterior sobre negro puro
+   leía a landing de cripto; #e6b843 sobre tinta cálida lee a
+   marca. Sin degradados de relleno, sin glow, sin cristal.
+   ============================================================ */
 :root{
-  --amarillo:#ffd400;
-  --negro:#050505;
-  --hueso:#f7f4ea;
-  --gris:#8b8474;
-  --gris2:#5d5744;
-  --linea:#1d1a10;
+  --tinta:#0a0908;
+  --tinta2:#100f0d;
+  --tinta3:#161513;
+  --papel:#f4f1ea;
+  --gris:#8f897d;
+  --gris2:#5d584e;
+  --linea:#221f1a;
+  --linea2:#2f2b24;
+  --oro:#e6b843;
+  --oro2:#c9942a;
   --display:'Archivo Black',Manrope,sans-serif;
+  --curva:cubic-bezier(.22,.8,.28,1);
+  --ancho:1280px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--negro);font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--hueso);-webkit-font-smoothing:antialiased}
-a{color:var(--amarillo);text-decoration:none}
-a:hover{color:#fff08a}
-input,button{font-family:inherit}
-img,video{display:block}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--tinta);color:var(--papel);
+  font-family:Manrope,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+a{color:inherit;text-decoration:none}
+input,button,select{font-family:inherit;color:inherit}
+button{background:none;border:0;cursor:pointer}
+img,video{display:block;max-width:100%}
+[hidden]{display:none !important}
+::selection{background:var(--oro);color:var(--tinta)}
 ::-webkit-scrollbar{height:8px;width:9px}
 ::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:#2a2410;border-radius:9px}
+::-webkit-scrollbar-thumb{background:#2b2720;border-radius:9px}
+:focus-visible{outline:2px solid var(--oro);outline-offset:3px}
 
-@keyframes dcfade{from{opacity:0}to{opacity:1}}
-@keyframes dcpop{from{opacity:0;transform:scale(.97) translateY(10px)}to{opacity:1;transform:none}}
-@keyframes dcrise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
-@keyframes dcglow{0%,100%{box-shadow:0 0 0 0 rgba(255,212,0,.35)}50%{box-shadow:0 0 0 9px rgba(255,212,0,0)}}
-@keyframes dcticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@keyframes dcsheen{0%{transform:translateX(-140%) skewX(-18deg)}55%,100%{transform:translateX(240%) skewX(-18deg)}}
-@keyframes dcbar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+/* grano: lo único "de textura" que queda. Le quita el plástico a
+   los planos grandes de negro sin meter un solo degradado. */
+.grano{position:fixed;inset:-40%;z-index:80;pointer-events:none;opacity:.035;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:granoMov 6s steps(4) infinite}
+@keyframes granoMov{0%{transform:translate(0,0)}25%{transform:translate(-2%,1%)}50%{transform:translate(2%,-2%)}75%{transform:translate(-1%,-1%)}100%{transform:translate(0,0)}}
 
-.wrap{min-height:100vh;background:
-  radial-gradient(920px 520px at 82% -16%, #241d02 0%, rgba(5,5,5,0) 60%),
-  radial-gradient(760px 460px at 8% 42%, #14120a 0%, rgba(5,5,5,0) 58%)}
+/* ---------- tipografía ---------- */
+.dsp{font-family:var(--display);text-transform:uppercase;letter-spacing:-.035em;line-height:.94;text-wrap:balance}
+.kicker{font-size:.7rem;font-weight:800;letter-spacing:.22em;text-transform:uppercase;color:var(--gris2)}
+.kicker b{color:var(--oro);font-weight:800}
 
-/* ---------- header ---------- */
-.top{position:sticky;top:0;z-index:40;backdrop-filter:blur(14px);background:rgba(5,5,5,.86);border-bottom:1px solid var(--linea)}
-.top-in{max-width:1340px;margin:0 auto;padding:13px 26px;display:flex;align-items:center;gap:20px}
-.logo{font-family:var(--display);font-size:1.14rem;letter-spacing:-.02em;white-space:nowrap;text-transform:uppercase}
-.logo span{color:var(--amarillo)}
-.nav{display:flex;gap:6px;margin-left:8px;min-width:0;overflow-x:auto;scrollbar-width:none}
-.nav::-webkit-scrollbar{display:none}
-.nav a{color:var(--gris);font-size:.83rem;font-weight:700;padding:8px 13px;border-radius:999px;white-space:nowrap;transition:color .18s,background .18s}
-.nav a:hover{color:var(--amarillo);background:rgba(255,212,0,.09)}
-.spacer{flex:1}
-.btn-tg{display:inline-flex;align-items:center;gap:8px;color:var(--negro);background:var(--amarillo);font-weight:800;font-size:.85rem;padding:10px 18px;border-radius:999px;white-space:nowrap;transition:transform .18s,box-shadow .22s}
-.btn-tg:hover{color:var(--negro);transform:translateY(-2px);box-shadow:0 12px 26px -10px rgba(255,212,0,.75)}
-.btn-tg svg{width:17px;height:17px}
+/* ---------- revelado ---------- */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .7s var(--curva),transform .7s var(--curva)}
+.rv.on{opacity:1;transform:none}
+/* revelado por palabra, sólo en los titulares grandes */
+.pal{display:inline-block;overflow:hidden;vertical-align:top}
+.pal>span{display:inline-block;transform:translateY(102%);transition:transform .8s var(--curva)}
+.on .pal>span{transform:none}
+
+/* ---------- botones ---------- */
+.btn{position:relative;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  font-weight:800;font-size:.95rem;letter-spacing:.01em;padding:16px 26px;border-radius:10px;
+  transition:transform .2s var(--curva),background .2s,color .2s,border-color .2s;white-space:nowrap}
+.btn svg{width:19px;height:19px;flex:0 0 auto}
+.btn-1{background:var(--oro);color:#151005}
+.btn-1:hover{background:#f3c956;transform:translateY(-2px)}
+.btn-1:active{transform:translateY(0) scale(.985)}
+.btn-2{border:1px solid var(--linea2);color:var(--papel)}
+.btn-2:hover{border-color:var(--gris2);background:var(--tinta3);transform:translateY(-2px)}
+.btn-sm{padding:11px 18px;font-size:.85rem;border-radius:9px}
+.btn-lg{padding:19px 34px;font-size:1.05rem;border-radius:12px}
+
+/* ---------- navbar ---------- */
+.nav{position:sticky;top:0;z-index:60;border-bottom:1px solid transparent;transition:background .3s,border-color .3s,backdrop-filter .3s}
+.nav.pegado{background:rgba(10,9,8,.86);backdrop-filter:blur(16px) saturate(1.2);border-bottom-color:var(--linea)}
+.nav-in{max-width:var(--ancho);margin:0 auto;padding:14px 28px;display:flex;align-items:center;gap:26px}
+.marca{display:flex;align-items:center;gap:10px;flex:0 0 auto}
+.marca-sig{width:30px;height:30px;border-radius:7px;background:var(--oro);color:#151005;display:grid;place-items:center;font-family:var(--display);font-size:.85rem}
+.marca-txt{font-family:var(--display);font-size:1.02rem;letter-spacing:-.02em;text-transform:uppercase}
+.marca-txt span{color:var(--oro)}
+.nav-links{display:flex;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--gris);font-size:.85rem;font-weight:700;padding:9px 13px;border-radius:8px;white-space:nowrap;transition:color .18s,background .18s}
+.nav-links a:hover,.nav-links a.act{color:var(--papel);background:var(--tinta3)}
+.crecer{flex:1}
 
 /* ---------- hero ---------- */
-.hero{max-width:900px;margin:0 auto;padding:66px 26px 30px;text-align:center;animation:dcrise .5s ease both}
-.pill{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;border-radius:999px;border:1px solid rgba(255,212,0,.34);background:rgba(255,212,0,.08);color:var(--amarillo);font-size:.72rem;font-weight:800;letter-spacing:.13em;text-transform:uppercase;margin-bottom:24px}
-.pill i{width:7px;height:7px;border-radius:50%;background:var(--amarillo);animation:dcglow 2s ease-in-out infinite}
-.hero h1{font-family:var(--display);font-size:clamp(2.1rem,5.6vw,3.5rem);line-height:1.03;letter-spacing:-.035em;text-transform:uppercase;text-wrap:balance}
-.hero h1 em{font-style:normal;color:var(--amarillo)}
-.lead{color:#9a9384;margin:18px auto 0;line-height:1.65;font-size:1.03rem;max-width:540px;text-wrap:pretty}
+.hero{position:relative;min-height:clamp(600px,92vh,940px);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--linea)}
+/* mosaico con el material real del catálogo: la prueba visual no se
+   fabrica, ya está en img/. Va oscurecido para que el titular mande. */
+.hero-mosaico{position:absolute;inset:0;z-index:0;display:grid;gap:6px;
+  grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;
+  transform:scale(1.12) rotate(-3deg);transform-origin:center;opacity:.26;filter:blur(2.5px)}
+.hero-mosaico div{position:relative;overflow:hidden;background:var(--tinta2)}
+.hero-mosaico img,.hero-mosaico video{width:100%;height:100%;object-fit:cover;filter:grayscale(.8) contrast(1.1) brightness(.5)}
+.hero-mosaico .cl{animation:deriva 34s ease-in-out infinite alternate}
+@keyframes deriva{from{transform:translateY(0)}to{transform:translateY(-42px)}}
+.hero-luz{position:absolute;inset:-6%;z-index:2;pointer-events:none;
+  background:url("img/marca/luz.jpg") center/cover no-repeat;
+  mix-blend-mode:screen;opacity:.55;animation:vaiven 26s ease-in-out infinite alternate}
+@keyframes vaiven{from{transform:scale(1.04) translate(0,0)}to{transform:scale(1.12) translate(-2.5%,1.5%)}}
+.hero-velo{position:absolute;inset:0;z-index:1;pointer-events:none;background:
+  linear-gradient(180deg,rgba(10,9,8,.92) 0%,rgba(10,9,8,.62) 38%,rgba(10,9,8,.88) 78%,var(--tinta) 100%),
+  radial-gradient(115% 85% at 22% 46%,rgba(10,9,8,.9) 0%,rgba(10,9,8,.32) 55%,transparent 78%)}
+.hero-in{position:relative;z-index:3;max-width:var(--ancho);margin:0 auto;padding:120px 28px 56px;width:100%}
+.hero-marca{display:inline-flex;align-items:center;gap:9px;margin-bottom:26px;color:#cdc5b4;text-shadow:0 1px 12px rgba(10,9,8,.85)}
+.hero-marca i{width:6px;height:6px;border-radius:50%;background:var(--oro);flex:0 0 auto}
+.hero h1{font-family:var(--display);text-transform:uppercase;letter-spacing:-.04em;line-height:.96;
+  font-size:clamp(2.9rem,9.2vw,7rem);max-width:14ch}
+.hero h1 em{font-style:normal;color:var(--oro)}
+.hero-sub{margin-top:26px;max-width:44ch;font-size:clamp(1.02rem,1.9vw,1.22rem);line-height:1.5;color:#b8b1a3;font-weight:500}
+.hero-ctas{display:flex;gap:12px;margin-top:36px;flex-wrap:wrap}
+.hero-pie{display:flex;gap:26px;margin-top:38px;flex-wrap:wrap;align-items:center}
+.hero-pie div{display:flex;align-items:baseline;gap:8px}
+.hero-pie b{font-family:var(--display);font-size:1.5rem;color:var(--papel);letter-spacing:-.02em}
+.hero-pie span{font-size:.74rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--gris2)}
+.hero-in>*{animation:entra .85s var(--curva) both}
+.hero-in>*:nth-child(1){animation-delay:.04s}
+.hero-in>*:nth-child(2){animation-delay:.1s}
+.hero-in>*:nth-child(3){animation-delay:.18s}
+.hero-in>*:nth-child(4){animation-delay:.26s}
+.hero-in>*:nth-child(5){animation-delay:.34s}
+@keyframes entra{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.baja{position:absolute;left:50%;bottom:22px;z-index:3;transform:translateX(-50%);color:var(--gris2);font-size:1.3rem;animation:baja 2.4s ease-in-out infinite}
+@keyframes baja{0%,100%{transform:translate(-50%,0);opacity:.5}50%{transform:translate(-50%,7px);opacity:1}}
 
-/* ---------- hub ---------- */
-.hub-wrap{max-width:1340px;margin:30px auto 0;padding:0 26px}
-.hub{display:flex;align-items:center;gap:22px;background:linear-gradient(100deg,#151206 0%,#0c0b06 58%);border:1px solid rgba(255,212,0,.34);border-radius:18px;overflow:hidden;position:relative;transition:transform .2s,box-shadow .26s,border-color .2s}
-.hub:hover{transform:translateY(-3px);border-color:var(--amarillo);box-shadow:0 24px 52px -22px rgba(255,212,0,.5);color:var(--amarillo)}
-.hub-bar{width:5px;align-self:stretch;background:var(--amarillo);flex:0 0 auto}
-.hub-ico{display:flex;align-items:center;justify-content:center;width:52px;height:52px;border-radius:50%;background:rgba(255,212,0,.12);border:1px solid rgba(255,212,0,.34);flex:0 0 auto;margin:20px 0 20px 4px;animation:dcglow 2.6s ease-in-out infinite}
-.hub-ico svg{width:25px;height:25px}
-.hub-txt{display:flex;flex-direction:column;gap:5px;padding:20px 0;min-width:0}
-.hub-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.hub-title{font-family:var(--display);font-size:1.12rem;letter-spacing:-.02em;text-transform:uppercase;color:var(--hueso)}
-.hub-tag{background:var(--amarillo);color:var(--negro);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:4px 9px;border-radius:999px}
-.hub-sub{color:var(--gris);font-size:.88rem;line-height:1.5}
-.hub-cta{display:flex;align-items:center;gap:9px;background:var(--amarillo);color:var(--negro);font-weight:800;font-size:.87rem;padding:12px 20px;border-radius:11px;margin:20px 22px 20px 0;white-space:nowrap;position:relative;overflow:hidden}
-.hub-cta::before,.buy::before{content:'';position:absolute;top:0;left:0;width:34%;height:100%;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.6),rgba(255,255,255,0))}
-.hub-cta::before{animation:dcsheen 3.8s ease-in-out infinite}
-
-/* ---------- ticker ---------- */
-.ticker{overflow:hidden;border-top:1px solid var(--linea);border-bottom:1px solid var(--linea);background:#0b0a06;padding:11px 0;margin:14px 0 40px}
-.ticker-track{display:flex;gap:44px;width:max-content;animation:dcticker 26s linear infinite}
-.ticker span{font-size:.75rem;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--gris2);white-space:nowrap}
-
-/* ---------- toolbar ---------- */
-.toolbar{max-width:1340px;margin:0 auto;padding:0 26px;display:flex;gap:14px;align-items:center;flex-wrap:wrap;justify-content:space-between}
-.search{position:relative;flex:1 1 260px;max-width:380px}
-.search i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--gris2);font-size:.95rem;font-style:normal}
-.search input{width:100%;background:#0d0c07;border:1px solid #241f12;border-radius:12px;padding:12px 16px 12px 36px;color:var(--hueso);font-size:.9rem;outline:none;transition:border-color .18s,box-shadow .18s}
-.search input:focus{border-color:var(--amarillo);box-shadow:0 0 0 3px rgba(255,212,0,.12)}
-.count{color:var(--gris2);font-size:.79rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+/* ---------- cinta de datos ---------- *
+   Cuatro números y ninguno inventado: salen de contar SECTIONS.
+   Si mañana subís un pack más, el número sube solo. */
+.cinta{border-bottom:1px solid var(--linea);background:var(--tinta2)}
+.cinta-in{max-width:var(--ancho);margin:0 auto;padding:0 28px;display:grid;grid-template-columns:repeat(4,1fr)}
+.cinta-it{padding:32px 18px;text-align:center;border-left:1px solid var(--linea)}
+.cinta-it:first-child{border-left:0}
+.cinta-it b{display:block;font-family:var(--display);font-size:clamp(1.9rem,4.2vw,2.9rem);letter-spacing:-.03em;line-height:1}
+.cinta-it span{display:block;margin-top:8px;font-size:.7rem;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--gris2)}
 
 /* ---------- secciones ---------- */
-.sec{max-width:1340px;margin:52px auto 0;padding:0 26px;scroll-margin-top:78px}
-.sec-head{display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap;margin-bottom:6px}
-.sec-head h2{font-family:var(--display);font-size:clamp(1.5rem,3.4vw,2.15rem);line-height:1;letter-spacing:-.03em;text-transform:uppercase}
-.sec-kicker{color:var(--amarillo);font-size:.74rem;font-weight:800;letter-spacing:.16em;line-height:1.6;text-transform:uppercase;padding-bottom:5px;max-width:100%}
-.sec-count{color:var(--gris2);font-size:.78rem;font-weight:700;padding-bottom:5px;white-space:nowrap}
-.sec-bar{height:3px;background:linear-gradient(90deg,var(--amarillo) 0%,rgba(255,212,0,0) 72%);border-radius:3px;transform-origin:left;animation:dcbar .8s cubic-bezier(.2,.8,.3,1) both;margin-bottom:26px}
-.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}
+.blq{max-width:var(--ancho);margin:0 auto;padding:104px 28px}
+.blq-cab{display:flex;align-items:flex-end;gap:26px;flex-wrap:wrap;margin-bottom:44px}
+.blq-cab h2{font-family:var(--display);text-transform:uppercase;letter-spacing:-.035em;line-height:1;
+  font-size:clamp(1.9rem,4.6vw,3.2rem);max-width:18ch}
+.blq-cab h2 em{font-style:normal;color:var(--oro)}
+.blq-cab p{color:var(--gris);font-size:.97rem;line-height:1.55;max-width:38ch}
+.num{font-family:var(--display);font-size:.72rem;color:var(--oro);letter-spacing:.1em;margin-bottom:14px;display:block}
 
-/* ---------- card ---------- */
-.card{background:linear-gradient(180deg,#100f0a 0%,#0a0906 100%);border:1px solid #211d12;border-radius:18px;overflow:hidden;display:flex;flex-direction:column;animation:dcrise .5s ease both;transition:transform .22s ease,border-color .22s ease,box-shadow .26s ease}
-.card:hover{transform:translateY(-6px);border-color:rgba(255,212,0,.55);box-shadow:0 26px 50px -24px rgba(255,212,0,.42)}
-.cover{position:relative;aspect-ratio:4/3;background:#030303;cursor:zoom-in;overflow:hidden}
-.ph{position:absolute;inset:0;background:repeating-linear-gradient(135deg,#0b0a06 0 11px,#12100a 11px 22px);display:flex;align-items:center;justify-content:center}
-.ph span{font:500 10.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:#4a442f;letter-spacing:.1em;text-transform:uppercase}
-.cover>img,.cover>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .5s cubic-bezier(.2,.8,.3,1)}
-.card:hover .cover>img,.card:hover .cover>video{transform:scale(1.06)}
-.shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,3,3,.5) 0%,rgba(3,3,3,0) 36%,rgba(3,3,3,.72) 100%);pointer-events:none}
-.medialabel{position:absolute;bottom:11px;left:11px;background:rgba(3,3,3,.76);backdrop-filter:blur(6px);border:1px solid rgba(255,212,0,.16);padding:5px 11px;border-radius:999px;font-size:.71rem;font-weight:700;color:#cfc7ae}
-.body{padding:17px 17px 19px;display:flex;flex-direction:column;gap:11px;flex:1}
-.name{font-size:1.05rem;font-weight:800;letter-spacing:-.015em;line-height:1.25}
-.price{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:rgba(255,212,0,.1);border:1px solid rgba(255,212,0,.3);padding:6px 12px;border-radius:8px}
-.price i{width:5px;height:5px;border-radius:50%;background:var(--amarillo)}
-.price b{font-size:.83rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--amarillo)}
-.feats{list-style:none;display:flex;flex-direction:column;gap:6px;margin-top:auto;padding-top:4px}
-.feats li{display:flex;gap:9px;align-items:flex-start;color:#b3ab95;font-size:.81rem;line-height:1.45}
-.feats i{color:var(--amarillo);font-weight:800;font-style:normal;flex:0 0 auto}
-.buy{position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center;gap:9px;background:var(--amarillo);color:var(--negro);font-weight:800;font-size:.9rem;padding:12px 16px;border-radius:11px;margin-top:6px;transition:transform .16s,box-shadow .22s}
-.buy:hover{transform:translateY(-2px);color:var(--negro);box-shadow:0 14px 30px -12px rgba(255,212,0,.85)}
-.buy::before{animation:dcsheen 3.4s ease-in-out infinite}
-.buy svg{width:18px;height:18px;flex:0 0 auto}
+/* ---------- categorías ---------- */
+.cats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.cat{position:relative;aspect-ratio:3/4.4;overflow:hidden;border-radius:12px;border:1px solid var(--linea);display:flex;flex-direction:column;justify-content:flex-end;padding:22px;transition:border-color .3s,transform .4s var(--curva)}
+.cat:hover{border-color:var(--oro2);transform:translateY(-5px)}
+.cat-med{position:absolute;inset:0;z-index:0}
+.cat-med img,.cat-med video{width:100%;height:100%;object-fit:cover;filter:grayscale(.5) brightness(.55);transition:transform .8s var(--curva),filter .5s}
+.cat:hover .cat-med img,.cat:hover .cat-med video{transform:scale(1.07);filter:grayscale(0) brightness(.72)}
+.cat-velo{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(10,9,8,.15) 30%,rgba(10,9,8,.9) 100%)}
+.cat-txt{position:relative;z-index:2}
+.cat-txt h3{font-family:var(--display);text-transform:uppercase;font-size:1.28rem;letter-spacing:-.025em;line-height:1}
+.cat-txt p{margin-top:9px;color:#a9a294;font-size:.81rem;line-height:1.45;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.cat-n{position:absolute;top:18px;right:18px;z-index:2;font-size:.68rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--papel);background:rgba(10,9,8,.6);backdrop-filter:blur(6px);border:1px solid var(--linea2);padding:5px 10px;border-radius:999px}
 
-/* ---------- vacío / perks / footer ---------- */
-.empty{max-width:1340px;margin:40px auto 0;padding:60px 26px;text-align:center;color:var(--gris2)}
-.empty b{display:block;font-size:1.05rem;font-weight:800;color:#9a9384;margin-bottom:6px}
-.empty span{font-size:.88rem}
-.perks{max-width:1340px;margin:70px auto 0;padding:38px 26px 24px;border-top:1px solid var(--linea);display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
-.perks div{text-align:center}
-.perks b{display:block;font-size:.97rem;margin-bottom:4px;color:var(--amarillo)}
-.perks span{color:var(--gris2);font-size:.82rem}
-.foot{text-align:center;color:#3f3b2e;font-size:.79rem;padding:34px 20px 48px}
+/* Sello por línea. Los cuatro salieron de una sola imagen para que
+   compartan trazo y tamaño: generados por separado nunca cuadran. */
+.cat-sello{position:absolute;top:18px;left:18px;z-index:2;width:46px;height:46px;
+  opacity:.75;transition:opacity .35s var(--curva),transform .45s var(--curva)}
+.cat-sello img{width:100%;height:100%;object-fit:contain}
+.cat:hover .cat-sello{opacity:1;transform:scale(1.08) rotate(-4deg)}
 
-/* ---------- lightbox ---------- */
-.lb{position:fixed;inset:0;z-index:90;background:rgba(3,3,3,.92);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;animation:dcfade .18s ease}
-.lb[hidden]{display:none}
-.lb-panel{width:min(1000px,100%);max-height:92vh;display:flex;flex-direction:column;background:#0a0906;border:1px solid #241f12;border-radius:18px;overflow:hidden;animation:dcpop .22s cubic-bezier(.2,.8,.3,1)}
-.lb-head{display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid var(--linea)}
-.lb-head>div:first-child{min-width:0}
-.lb-name{font-weight:800;font-size:.97rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lb-counter{color:var(--gris2);font-size:.77rem;font-weight:700;margin-top:2px}
-.lb-buy{background:var(--amarillo);color:var(--negro);font-weight:800;font-size:.82rem;padding:9px 16px;border-radius:10px;white-space:nowrap}
-.lb-buy:hover{color:var(--negro)}
-.lb-close{cursor:pointer;width:34px;height:34px;border-radius:50%;background:#15130c;border:1px solid #2c2718;color:#9a9384;font-size:1.05rem;line-height:1;flex:0 0 auto;transition:background .18s,color .18s}
-.lb-close:hover{background:#211d12;color:var(--amarillo)}
-.lb-stage{position:relative;flex:1;min-height:0;background:#030303;display:flex;align-items:center;justify-content:center;aspect-ratio:16/10}
-.lb-stage .ph{background:repeating-linear-gradient(135deg,#0a0906 0 11px,#100e08 11px 22px)}
-.lb-stage .ph span{color:#403a29;text-transform:none;font-size:11px}
-.lb-media{position:relative;max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain;animation:dcfade .25s ease}
-.lb-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:5;width:42px;height:42px;border-radius:50%;background:rgba(8,8,8,.72);border:1px solid rgba(255,212,0,.22);color:var(--amarillo);font-size:1.2rem;cursor:pointer;backdrop-filter:blur(4px);transition:background .18s,color .18s}
-.lb-nav:hover{background:var(--amarillo);color:var(--negro)}
-.lb-nav.prev{left:12px}
-.lb-nav.next{right:12px}
-.lb-thumbs{display:flex;gap:9px;padding:12px;overflow-x:auto;background:#0d0c07;border-top:1px solid var(--linea)}
-.lb-thumb{position:relative;flex:0 0 78px;height:58px;border-radius:9px;overflow:hidden;cursor:pointer;background:#030303;border:2px solid transparent;opacity:.5;transition:opacity .18s,border-color .18s}
-.lb-thumb.on{border-color:var(--amarillo);opacity:1}
-.lb-thumb .ph{background:repeating-linear-gradient(135deg,#0b0a06 0 8px,#13110a 8px 16px)}
-.lb-thumb>img,.lb-thumb>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
-.lb-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.48);color:var(--amarillo);font-size:.85rem}
+/* ---------- utilidad: buscar / guardados ---------- */
+.util{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:30px}
+.buscar{position:relative;flex:1 1 250px;max-width:340px}
+.buscar i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:var(--gris2);font-style:normal}
+.buscar input{width:100%;background:var(--tinta2);border:1px solid var(--linea);border-radius:10px;padding:13px 16px 13px 38px;font-size:.9rem;outline:none;transition:border-color .2s,background .2s}
+.buscar input::placeholder{color:var(--gris2)}
+.buscar input:focus{border-color:var(--linea2);background:var(--tinta3)}
+.chip{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--linea);background:var(--tinta2);color:var(--gris);font-size:.83rem;font-weight:700;padding:12px 16px;border-radius:10px;transition:.2s}
+.chip:hover{color:var(--papel);border-color:var(--linea2)}
+.chip.on{color:var(--oro);border-color:var(--oro2);background:rgba(230,184,67,.08)}
+.chip svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.util .cta-n{margin-left:auto;font-size:.75rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gris2)}
 
-@media(max-width:860px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:700px){
-  .top-in{padding:11px 16px;gap:12px;flex-wrap:wrap}
-  .nav{order:3;width:100%;margin-left:0}
-  .hero{padding:44px 18px 24px}
-  .hub-wrap,.toolbar,.sec,.perks{padding-left:16px;padding-right:16px}
-  .hub{flex-wrap:wrap;gap:14px}
-  .hub-txt{padding:18px 16px 0 0;flex:1 1 100%;order:3}
-  .hub-cta{margin:0 16px 18px;order:4;flex:1 1 100%;justify-content:center}
-  .lb{padding:0}
-  .lb-panel{width:100%;max-height:100vh;height:100%;border:0;border-radius:0}
-  .lb-stage{aspect-ratio:auto}
+/* ---------- catálogo editorial ---------- */
+.linea-sec{display:flex;align-items:center;gap:18px;margin:74px 0 26px}
+.linea-sec:first-of-type{margin-top:0}
+.linea-sec h3{font-family:var(--display);text-transform:uppercase;font-size:clamp(1.3rem,2.9vw,1.85rem);letter-spacing:-.03em;white-space:nowrap}
+.linea-sec .rayita{flex:1;height:1px;background:var(--linea2)}
+.linea-sec .cnt{font-size:.74rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--gris2);white-space:nowrap}
+.linea-desc{color:var(--gris);font-size:.88rem;line-height:1.6;margin:-14px 0 26px;max-width:76ch}
+
+/* la rejilla deja de ser uniforme: el primero de cada línea ocupa
+   el doble. Rompe el patrón de catálogo y crea jerarquía. */
+.rej{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.rej .ficha.destacada{grid-column:span 2;grid-row:span 2}
+.rej .ficha:nth-child(4):last-child{grid-column:span 2}
+.rej .ficha.destacada .lienzo{aspect-ratio:auto}
+.rej .ficha:nth-child(4):last-child .lienzo{aspect-ratio:16/9}
+
+.ficha{position:relative;display:flex;flex-direction:column;border:1px solid var(--linea);border-radius:14px;overflow:hidden;background:var(--tinta2);transition:border-color .3s,transform .4s var(--curva)}
+.ficha:hover{border-color:var(--linea2);transform:translateY(-4px)}
+.lienzo{position:relative;aspect-ratio:4/5;overflow:hidden;background:#060505;cursor:zoom-in;flex:1 1 auto}
+.hueco{position:absolute;inset:0;background:repeating-linear-gradient(135deg,#0d0c0a 0 12px,#131210 12px 24px);display:grid;place-items:center}
+.hueco span{font:500 10px ui-monospace,Menlo,monospace;color:#46403a;letter-spacing:.12em;text-transform:uppercase}
+.lienzo>img,.lienzo>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  filter:brightness(.9) saturate(.94);transition:transform .8s var(--curva),filter .45s}
+.ficha:hover .lienzo>img,.ficha:hover .lienzo>video{transform:scale(1.05);filter:brightness(1.02) saturate(1.04)}
+.lienzo-velo{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(8,7,6,.45) 0%,rgba(8,7,6,0) 26%,rgba(8,7,6,.06) 58%,rgba(8,7,6,.86) 100%)}
+.marcador{position:absolute;top:11px;right:11px;z-index:3;width:33px;height:33px;border-radius:8px;display:grid;place-items:center;
+  background:rgba(10,9,8,.55);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.09);color:var(--papel);transition:.2s}
+.marcador:hover{background:rgba(10,9,8,.85)}
+.marcador svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linejoin:round}
+.marcador.on{color:var(--oro)}
+.marcador.on svg{fill:currentColor}
+.marcador.late svg{animation:late .45s var(--curva)}
+@keyframes late{0%,100%{transform:scale(1)}35%{transform:scale(1.3)}60%{transform:scale(.93)}}
+.cuenta{position:absolute;bottom:11px;left:11px;z-index:3;font-size:.71rem;font-weight:700;color:#d6cfc0;
+  background:rgba(10,9,8,.6);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.08);padding:5px 10px;border-radius:999px}
+.reproduce{position:absolute;top:11px;left:11px;z-index:3;width:29px;height:29px;border-radius:50%;display:grid;place-items:center;
+  background:rgba(10,9,8,.55);backdrop-filter:blur(8px);color:#fff;font-size:.62rem;padding-left:2px;transition:opacity .3s}
+.ficha.viva .reproduce{opacity:.3}
+.ficha-pie{padding:15px 16px 17px;display:flex;flex-direction:column;gap:10px}
+.ficha-cat{font-size:.66rem;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gris2)}
+.ficha-nom{font-size:1.02rem;font-weight:800;letter-spacing:-.015em;line-height:1.25}
+.ficha.destacada .ficha-nom{font-size:1.32rem}
+.plaza{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;border:1px solid var(--linea2);padding:5px 11px;border-radius:7px}
+.plaza i{width:4px;height:4px;border-radius:50%;background:var(--oro)}
+.plaza b{font-size:.74rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--oro)}
+.gana{font-size:.83rem;color:#a8a194;line-height:1.5;display:flex;gap:8px}
+.gana i{color:var(--oro);font-style:normal;flex:0 0 auto}
+.ficha .btn{margin-top:4px;width:100%}
+
+/* ---------- beneficios ---------- */
+.porque{border-top:1px solid var(--linea);border-bottom:1px solid var(--linea);background:var(--tinta2)}
+.porque-rej{max-width:var(--ancho);margin:0 auto;padding:0 28px;display:grid;grid-template-columns:repeat(4,1fr)}
+.porque-it{padding:56px 26px 60px;border-left:1px solid var(--linea)}
+.porque-it:first-child{border-left:0}
+.porque-it b{display:block;font-family:var(--display);text-transform:uppercase;font-size:1.12rem;letter-spacing:-.02em;line-height:1.05;margin:16px 0 12px}
+.porque-it p{color:var(--gris);font-size:.87rem;line-height:1.6}
+.porque-it .ico{display:block;width:46px;height:46px}
+.porque-it .ico img{width:100%;height:100%;object-fit:contain}
+
+/* ---------- faq ---------- */
+.faq{max-width:840px}
+.faq-it{border-bottom:1px solid var(--linea)}
+.faq-it:first-child{border-top:1px solid var(--linea)}
+.faq-q{width:100%;display:flex;align-items:center;gap:18px;padding:24px 4px;text-align:left;font-size:1.02rem;font-weight:700;letter-spacing:-.01em;transition:color .2s}
+.faq-q:hover{color:var(--oro)}
+.faq-q .mas{margin-left:auto;flex:0 0 auto;width:22px;height:22px;position:relative;color:var(--gris2);transition:color .2s,transform .3s var(--curva)}
+.faq-q .mas::before,.faq-q .mas::after{content:'';position:absolute;left:50%;top:50%;background:currentColor;transition:transform .3s var(--curva)}
+.faq-q .mas::before{width:13px;height:1.5px;transform:translate(-50%,-50%)}
+.faq-q .mas::after{width:1.5px;height:13px;transform:translate(-50%,-50%)}
+.faq-it.abierta .faq-q{color:var(--oro)}
+.faq-it.abierta .mas{color:var(--oro)}
+.faq-it.abierta .mas::after{transform:translate(-50%,-50%) scaleY(0)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .38s var(--curva)}
+.faq-it.abierta .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden}
+.faq-a p{color:var(--gris);font-size:.93rem;line-height:1.65;padding:0 4px 26px;max-width:64ch}
+
+/* ---------- cierre ---------- */
+.cierre-tela{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.cierre-tela::before{content:'';position:absolute;inset:-8%;
+  background:url("img/marca/noche.jpg") center/cover no-repeat;
+  opacity:.95;animation:vaiven 30s ease-in-out infinite alternate}
+.cierre-tela::after{content:'';position:absolute;inset:0;
+  background:radial-gradient(120% 88% at 50% 46%,rgba(10,9,8,.12) 0%,rgba(10,9,8,.62) 52%,rgba(10,9,8,.93) 84%,var(--tinta) 100%)}
+.cierre>*:not(.cierre-tela){position:relative;z-index:1}
+.cierre{position:relative;text-align:center;padding:120px 28px 128px;border-top:1px solid var(--linea);overflow:hidden}
+.cierre h2{font-family:var(--display);text-transform:uppercase;letter-spacing:-.04em;line-height:1;
+  font-size:clamp(2.3rem,7vw,5rem);max-width:16ch;margin:0 auto}
+.cierre h2 em{font-style:normal;color:var(--oro)}
+.cierre p{margin:24px auto 0;max-width:40ch;color:var(--gris);font-size:1.02rem;line-height:1.55}
+.cierre .hero-ctas{justify-content:center;margin-top:38px}
+.pie{border-top:1px solid var(--linea);padding:34px 28px 40px;text-align:center;color:var(--gris2);font-size:.8rem;line-height:1.7}
+.pie a{color:var(--gris)}
+.pie a:hover{color:var(--oro)}
+
+/* ---------- barra móvil ---------- */
+.movil{position:fixed;left:0;right:0;bottom:0;z-index:70;display:none;gap:10px;align-items:center;
+  padding:11px 14px calc(11px + env(safe-area-inset-bottom));background:rgba(10,9,8,.93);backdrop-filter:blur(18px);border-top:1px solid var(--linea)}
+.movil .btn{flex:1}
+.arriba{width:46px;height:46px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;border:1px solid var(--linea2);color:var(--gris);font-size:1.05rem}
+
+/* ---------- visor ---------- */
+.visor{position:fixed;inset:0;z-index:95;background:rgba(6,5,5,.96);backdrop-filter:blur(16px);display:flex;align-items:center;justify-content:center;padding:22px;animation:aparece .2s ease}
+@keyframes aparece{from{opacity:0}to{opacity:1}}
+@keyframes sube{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.visor-caja{position:relative;width:min(440px,100%);height:min(90vh,900px);display:flex;flex-direction:column;
+  background:#0a0908;border:1px solid var(--linea2);border-radius:18px;overflow:hidden;animation:sube .3s var(--curva)}
+.visor-barras{position:absolute;top:0;left:0;right:0;z-index:8;display:flex;gap:3px;padding:12px 12px 0}
+.visor-barras i{flex:1;height:2.5px;border-radius:2px;background:rgba(255,255,255,.24);overflow:hidden}
+.visor-barras i b{display:block;height:100%;background:#fff;transform-origin:left;transform:scaleX(0)}
+.visor-barras i.hecha b{transform:scaleX(1)}
+.visor-barras i.activa b{animation:avanza var(--dur,4.5s) linear forwards}
+@keyframes avanza{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.visor-cab{position:absolute;top:0;left:0;right:0;z-index:7;display:flex;align-items:center;gap:11px;padding:26px 13px 28px;
+  background:linear-gradient(180deg,rgba(6,5,5,.8),transparent)}
+.visor-sig{width:32px;height:32px;border-radius:8px;background:var(--oro);color:#151005;display:grid;place-items:center;font-family:var(--display);font-size:.78rem;flex:0 0 auto}
+.visor-nom{font-weight:800;font-size:.88rem;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visor-sub{color:rgba(255,255,255,.58);font-size:.72rem;font-weight:600;line-height:1.3}
+.visor-bt{width:33px;height:33px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,.1);color:#fff;font-size:.95rem;flex:0 0 auto;transition:background .2s}
+.visor-bt:hover{background:rgba(255,255,255,.2)}
+.visor-tela{position:relative;flex:1;min-height:0;background:#060505;display:grid;place-items:center;overflow:hidden}
+.visor-fondo{position:absolute;inset:-8%;width:116%;height:116%;object-fit:cover;filter:blur(36px) saturate(1.4) brightness(.45);z-index:0}
+.visor-media{position:relative;z-index:1;width:100%;height:100%;object-fit:contain;animation:aparece .3s ease}
+.visor-zona{position:absolute;top:0;bottom:82px;width:34%;z-index:6}
+.visor-zona.izq{left:0}
+.visor-zona.der{right:0}
+.visor-fl{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;
+  background:rgba(10,9,8,.6);border:1px solid var(--linea2);color:var(--papel);display:grid;place-items:center;opacity:0;transition:opacity .22s,background .2s}
+.visor-caja:hover .visor-fl{opacity:1}
+.visor-fl:hover{background:var(--oro);color:#151005}
+.visor-zona.izq .visor-fl{left:12px}
+.visor-zona.der .visor-fl{right:12px}
+.visor-pie{position:absolute;left:0;right:0;bottom:0;z-index:7;padding:38px 14px 15px;
+  background:linear-gradient(0deg,rgba(6,5,5,.95) 30%,transparent);display:flex;align-items:center;gap:12px}
+.visor-pie .t{min-width:0;flex:1}
+.visor-pie .t b{display:block;font-size:.93rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.visor-pie .t span{color:rgba(255,255,255,.55);font-size:.75rem;font-weight:600}
+
+
+/* ---------- banda de muestra ---------- *
+   Tus propias fotos, censuradas. El embudo es: acá se tapa, en el
+   catalogo se abre. Censurar sube el deseo mas que mostrar, y ademas
+   esto es material real: no hay nada generado en esta banda. */
+.muestra{position:relative;overflow:hidden;border-bottom:1px solid var(--linea);background:var(--tinta);scroll-margin-top:80px}
+.muestra-tira{display:flex;gap:8px;width:max-content;padding:0;animation:desfile 46s linear infinite}
+.muestra:hover .muestra-tira{animation-play-state:paused}
+@keyframes desfile{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.muestra-it{position:relative;flex:0 0 auto;width:168px;aspect-ratio:4/5;overflow:hidden;border-radius:6px;background:#070606}
+.muestra-it img,.muestra-it video{width:100%;height:100%;object-fit:cover;
+  filter:grayscale(.75) contrast(1.25) brightness(.42) sepia(.25)}
+/* la barra de censura */
+.muestra-it::after{content:'';position:absolute;left:0;right:0;top:38%;height:22%;background:#050404}
+.muestra-velo{position:absolute;inset:0;pointer-events:none;background:
+  linear-gradient(90deg,var(--tinta) 0%,rgba(10,9,8,.2) 20%,rgba(10,9,8,.2) 80%,var(--tinta) 100%),
+  linear-gradient(180deg,rgba(10,9,8,.2) 0%,rgba(10,9,8,.5) 42%,rgba(10,9,8,.93) 78%,var(--tinta) 100%)}
+.muestra-txt{position:relative;z-index:2;max-width:var(--ancho);margin:0 auto;padding:0 28px 72px;margin-top:-84px;text-align:center}
+.muestra-txt h2{font-family:var(--display);text-transform:uppercase;letter-spacing:-.035em;line-height:1;
+  font-size:clamp(1.8rem,4.4vw,3rem);max-width:16ch;margin:0 auto}
+.muestra-txt h2 em{font-style:normal;color:var(--oro)}
+.muestra-txt p{color:var(--gris);font-size:.95rem;line-height:1.55;margin:16px auto 26px;max-width:44ch}
+
+/* ---------- puerta de edad ---------- */
+.puerta{position:fixed;inset:0;z-index:200;display:grid;place-items:center;padding:24px;background:#060505;overflow:hidden}
+.puerta::before{content:'';position:absolute;inset:0;background:url("img/marca/umbral.jpg") center/cover no-repeat;
+  opacity:.85;animation:umbral 18s ease-out both}
+.puerta::after{content:'';position:absolute;inset:0;background:
+  radial-gradient(95% 75% at 50% 52%,rgba(6,5,5,.22) 0%,rgba(6,5,5,.7) 52%,rgba(6,5,5,.92) 100%)}
+@keyframes umbral{from{transform:scale(1.07)}to{transform:scale(1)}}
+.puerta-caja{position:relative;z-index:1}
+.puerta-caja{width:min(420px,100%);text-align:center;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:38px 28px 30px;background:rgba(12,10,8,.72);backdrop-filter:blur(18px) saturate(1.2)}
+.puerta-sig{width:46px;height:46px;margin:0 auto 20px;border-radius:11px;background:var(--oro);color:#151005;display:grid;place-items:center;font-family:var(--display);font-size:1.15rem}
+.puerta h2{font-family:var(--display);text-transform:uppercase;letter-spacing:-.03em;line-height:1;font-size:1.5rem;margin-bottom:12px}
+.puerta p{color:var(--gris);font-size:.9rem;line-height:1.6;margin-bottom:24px}
+.puerta .btn{width:100%}
+.puerta .no{display:block;margin-top:14px;color:var(--gris2);font-size:.82rem;font-weight:700}
+.puerta .no:hover{color:var(--gris)}
+.puerta .legal{margin-top:20px;padding-top:16px;border-top:1px solid var(--linea);color:#4a463d;font-size:.72rem;line-height:1.5}
+
+
+/* ---------- barra de scrub ---------- *
+   Al pasar el cursor por una portada de video, el eje X controla el
+   tiempo del clip: mover la mano es rebobinar. La barra dorada da la
+   pista de que eso se puede hacer; sin ella el gesto no se descubre. */
+.lienzo .barra{position:absolute;left:0;right:0;bottom:0;z-index:4;height:2px;background:rgba(255,255,255,.14);
+  opacity:0;transition:opacity .25s}
+.lienzo .barra i{display:block;height:100%;width:0;background:var(--oro)}
+.ficha:hover .lienzo .barra{opacity:1}
+
+/* ---------- transición de tarjeta a visor ---------- *
+   El medio no aparece: crece desde la propia portada hasta pantalla
+   completa. Es la diferencia entre "se abrió un modal" y "entré". */
+@media(prefers-reduced-motion:no-preference){
+  ::view-transition-old(media-activa),
+  ::view-transition-new(media-activa){animation-duration:.42s;animation-timing-function:cubic-bezier(.22,.8,.28,1)}
+  ::view-transition-group(media-activa){z-index:1}
 }
-@media(max-width:560px){.grid{grid-template-columns:1fr}}
+
+/* ---------- vacío ---------- */
+.vacio{padding:70px 26px;text-align:center;color:var(--gris2)}
+.vacio b{display:block;font-size:1.05rem;font-weight:800;color:var(--gris);margin-bottom:6px}
+
+/* ============================================================
+   RESPONSIVE — probado en 375 / 390 / 430 / 768 / 1024 / 1440 / 1920
+   ============================================================ */
+@media(min-width:1600px){:root{--ancho:1400px}}
+@media(max-width:1080px){
+  .cats{grid-template-columns:repeat(2,1fr)}
+  .cat{aspect-ratio:3/3.6}
+  .rej{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .rej .ficha.destacada{grid-column:span 2;grid-row:auto}
+  .rej .ficha:nth-child(4):last-child{grid-column:auto}
+  .rej .ficha:nth-child(4):last-child .lienzo{aspect-ratio:4/5}
+  .rej .ficha.destacada .lienzo{aspect-ratio:16/11}
+  .porque-rej{grid-template-columns:repeat(2,1fr)}
+  .porque-it:nth-child(3){border-left:0}
+  .porque-it:nth-child(-n+2){border-bottom:1px solid var(--linea)}
+}
+@media(max-width:860px){
+  .blq{padding:78px 22px}
+  .nav-links{display:none}
+  .hero-in{padding:96px 22px 44px}
+  .cinta-in{grid-template-columns:repeat(2,1fr);padding:0 22px}
+  .cinta-it:nth-child(3){border-left:0}
+  .cinta-it:nth-child(-n+2){border-bottom:1px solid var(--linea)}
+  .cinta-it{padding:26px 14px}
+  .movil{display:flex}
+  .pie{padding-bottom:104px}
+  .nav .btn{display:none}
+  .visor{padding:0}
+  .visor-caja{width:100%;height:100%;border:0;border-radius:0}
+  .visor-fl{display:none}
+  .porque-it{padding:40px 20px 44px}
+  .cierre{padding:88px 22px 96px}
+}
+@media(max-width:560px){
+  .blq{padding:64px 18px}
+  .hero-in{padding:84px 18px 40px}
+  .hero{min-height:88vh}
+  .hero-mosaico{grid-template-columns:repeat(3,1fr)}
+  .hero-luz{background-image:url("img/marca/luz-movil.jpg");opacity:.62}
+  .cierre-tela::before{background-image:url("img/marca/noche-movil.jpg")}
+  .cats{grid-template-columns:1fr;gap:12px}
+  .muestra-it{width:132px}
+  .muestra-txt{margin-top:-58px;padding-bottom:56px}
+  .cat{aspect-ratio:16/10}
+  .rej{grid-template-columns:1fr;gap:16px}
+  .linea-desc{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+  .rej .ficha.destacada{grid-column:auto}
+  .rej .ficha.destacada .lienzo{aspect-ratio:4/5}
+  .porque-rej{grid-template-columns:1fr;padding:0 18px}
+  .porque-it{border-left:0;border-bottom:1px solid var(--linea)}
+  .porque-it:last-child{border-bottom:0}
+  .hero-ctas{flex-direction:column;align-items:stretch}
+  .hero-ctas .btn{width:100%}
+  .util .cta-n{margin-left:0;width:100%}
+  .marcador{width:40px;height:40px}
+  .cinta-it b{font-size:1.75rem}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.05s !important}
+  .rv{opacity:1;transform:none}
+  .pal>span{transform:none}
+  .grano,.hero-mosaico .cl,.baja,.hero-luz,.cierre-tela::before,.muestra-tira,.puerta::before{animation:none}
+  .hero-in>*{animation:none;opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
-<div class="wrap">
+<div class="grano" aria-hidden="true"></div>
 
-  <header class="top">
-    <div class="top-in">
-      <div class="logo">Tony<span>Shop</span></div>
-      <nav class="nav" id="nav"></nav>
-      <div class="spacer"></div>
-      <a class="btn-tg" id="botTop" target="_blank" rel="noopener">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-        <span>Contactar</span>
-      </a>
+<header class="nav" id="nav">
+  <div class="nav-in">
+    <a class="marca" href="#top">
+      <span class="marca-sig">T</span>
+      <span class="marca-txt">Tony<span>Shop</span></span>
+    </a>
+    <nav class="nav-links" id="navLinks" aria-label="Secciones"></nav>
+    <span class="crecer"></span>
+    <a class="btn btn-1 btn-sm" id="ctaNav" target="_blank" rel="noopener"></a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- 01 · ATENCIÓN -->
+  <section class="hero" id="inicio">
+    <div class="hero-mosaico" id="mosaico" aria-hidden="true"></div>
+    <div class="hero-luz" aria-hidden="true"></div>
+    <div class="hero-velo" aria-hidden="true"></div>
+    <div class="hero-in">
+      <div class="hero-marca kicker"><i></i><span id="heroKicker"></span></div>
+      <h1 id="heroTitulo"></h1>
+      <p class="hero-sub" id="heroSub"></p>
+      <div class="hero-ctas">
+        <a class="btn btn-1 btn-lg" id="ctaHero1" target="_blank" rel="noopener"></a>
+        <a class="btn btn-2 btn-lg" href="#catalogo" id="ctaHero2"></a>
+      </div>
+      <div class="hero-pie" id="heroPie"></div>
     </div>
-  </header>
-
-  <section class="hero">
-    <div class="pill"><i></i>Entrega automática</div>
-    <h1>Catálogo <em>oficial</em></h1>
-    <p class="lead">Elige tu plaza, toca comprar y el bot de Telegram te atiende al instante.</p>
+    <span class="baja" aria-hidden="true">↓</span>
   </section>
 
-  <div class="hub-wrap">
-    <a class="hub" id="hub" target="_blank" rel="noopener">
-      <span class="hub-bar"></span>
-      <span class="hub-ico">
-        <svg viewBox="0 0 24 24" fill="#ffd400"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
-      </span>
-      <span class="hub-txt">
-        <span class="hub-row">
-          <span class="hub-title">Hub oficial</span>
-          <span class="hub-tag">Comunidad</span>
-        </span>
-        <span class="hub-sub">Únete al canal de Telegram: avisos, nuevas plazas y contenido antes que nadie.</span>
-      </span>
-      <span class="spacer"></span>
-      <span class="hub-cta">Entrar al hub →</span>
-    </a>
-  </div>
+  <!-- 02 · PRUEBA: lo que hay dentro, contado del propio catálogo -->
+  <section class="cinta" id="cinta">
+    <div class="cinta-in" id="cintaIn"></div>
+  </section>
 
-  <div class="ticker"><div class="ticker-track" id="ticker"></div></div>
-
-  <div class="toolbar">
-    <div class="search" id="searchBox">
-      <i>⌕</i>
-      <input type="text" id="q" placeholder="Buscar producto o plaza…" autocomplete="off">
+  <!-- 03 · PRUEBA VISUAL: la muestra, censurada -->
+  <section class="muestra" id="muestra">
+    <div class="muestra-tira" id="muestraTira" aria-hidden="true"></div>
+    <div class="muestra-velo" aria-hidden="true"></div>
+    <div class="muestra-txt rv">
+      <span class="num">01 — La muestra</span>
+      <h2 id="muestraTitulo"></h2>
+      <p id="muestraSub"></p>
+      <a class="btn btn-1" href="#catalogo" id="ctaMuestra"></a>
     </div>
-    <div class="count" id="count"></div>
-  </div>
+  </section>
 
-  <main id="cat"></main>
-
-  <div class="empty" id="empty" hidden>
-    <b>Sin resultados</b>
-    <span>Prueba con otro término de búsqueda.</span>
-  </div>
-
-  <div class="perks">
-    <div><b>⚡ Inmediato</b><span>Entrega automática</span></div>
-    <div><b>🔒 Seguro</b><span>Compra vía Telegram</span></div>
-    <div><b>💬 Soporte</b><span>Atención directa</span></div>
-  </div>
-
-  <footer class="foot" id="foot"></footer>
-</div>
-
-<div class="lb" id="lb" hidden>
-  <div class="lb-panel" id="lbPanel">
-    <div class="lb-head">
+  <!-- 04 · CURIOSIDAD: las líneas -->
+  <section class="blq" id="lineas">
+    <div class="blq-cab rv">
       <div>
-        <div class="lb-name" id="lbName"></div>
-        <div class="lb-counter" id="lbCounter"></div>
+        <span class="num">02 — Líneas</span>
+        <h2 id="catsTitulo"></h2>
       </div>
-      <div class="spacer"></div>
-      <a class="lb-buy" id="lbBuy" target="_blank" rel="noopener"></a>
-      <button class="lb-close" id="lbClose" aria-label="Cerrar">✕</button>
+      <span class="crecer"></span>
+      <p id="catsSub"></p>
     </div>
-    <div class="lb-stage" id="lbStage">
-      <div class="ph"><span id="lbSlot"></span></div>
-      <button class="lb-nav prev" id="lbPrev" aria-label="Anterior">‹</button>
-      <button class="lb-nav next" id="lbNext" aria-label="Siguiente">›</button>
+    <div class="cats" id="cats"></div>
+  </section>
+
+  <!-- 04 · DESEO: el catálogo -->
+  <section class="blq" id="catalogo" style="padding-top:0">
+    <div class="blq-cab rv">
+      <div>
+        <span class="num">03 — Catálogo</span>
+        <h2 id="catTitulo"></h2>
+      </div>
+      <span class="crecer"></span>
+      <p id="catSub"></p>
     </div>
-    <div class="lb-thumbs" id="lbThumbs"></div>
+
+    <div class="util">
+      <div class="buscar" id="cajaBuscar">
+        <i>⌕</i>
+        <input type="search" id="q" placeholder="Buscar plaza o nombre…" autocomplete="off" aria-label="Buscar">
+      </div>
+      <button class="chip" id="chipGuardados" type="button" hidden>
+        <svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>
+        <span>Guardados</span><b id="nGuardados"></b>
+      </button>
+      <span class="cta-n" id="cuentaTotal"></span>
+    </div>
+
+    <div id="listado"></div>
+    <div class="vacio" id="vacio" hidden>
+      <b>Nada con ese nombre</b>
+      <span>Probá con otra plaza.</span>
+    </div>
+  </section>
+
+  <!-- 05 · REDUCCIÓN DE FRICCIÓN -->
+  <section class="porque" id="porque">
+    <div class="porque-rej" id="porqueRej"></div>
+  </section>
+
+  <!-- 06 · OBJECIONES -->
+  <section class="blq" id="faq">
+    <div class="blq-cab rv">
+      <div>
+        <span class="num">04 — Antes de comprar</span>
+        <h2 id="faqTitulo"></h2>
+      </div>
+    </div>
+    <div class="faq" id="faqLista"></div>
+  </section>
+
+  <!-- 07 · CIERRE -->
+  <section class="cierre rv" id="cierre">
+    <div class="cierre-tela" aria-hidden="true"></div>
+    <h2 id="cierreTitulo"></h2>
+    <p id="cierreSub"></p>
+    <div class="hero-ctas">
+      <a class="btn btn-1 btn-lg" id="ctaFinal1" target="_blank" rel="noopener"></a>
+      <a class="btn btn-2 btn-lg" id="ctaFinal2" target="_blank" rel="noopener"></a>
+    </div>
+  </section>
+</main>
+
+<footer class="pie" id="pie"></footer>
+
+<nav class="movil" aria-label="Comprar">
+  <button class="arriba" id="arriba" type="button" aria-label="Volver arriba">↑</button>
+  <a class="btn btn-1" id="ctaMovil" target="_blank" rel="noopener"></a>
+</nav>
+
+<div class="puerta" id="puerta" hidden role="dialog" aria-modal="true" aria-labelledby="puertaTit">
+  <div class="puerta-caja">
+    <div class="puerta-sig">18</div>
+    <h2 id="puertaTit"></h2>
+    <p id="puertaTxt"></p>
+    <button class="btn btn-1" id="puertaSi" type="button"></button>
+    <a class="no" id="puertaNo" href="https://www.google.com" rel="noopener"></a>
+    <p class="legal" id="puertaLegal"></p>
   </div>
 </div>
 
+<div class="visor" id="visor" hidden role="dialog" aria-modal="true" aria-label="Vista previa">
+  <div class="visor-caja" id="visorCaja">
+    <div class="visor-barras" id="visorBarras"></div>
+    <div class="visor-cab">
+      <span class="visor-sig" id="visorSig">T</span>
+      <div style="min-width:0;flex:1">
+        <div class="visor-nom" id="visorNom"></div>
+        <div class="visor-sub" id="visorSub"></div>
+      </div>
+      <button class="visor-bt" id="visorSon" type="button" aria-label="Activar sonido">🔇</button>
+      <button class="visor-bt" id="visorCerrar" type="button" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="visor-tela" id="visorTela">
+      <div class="hueco"><span id="visorHueco"></span></div>
+      <button class="visor-zona izq" id="visorPrev" type="button" aria-label="Anterior"><span class="visor-fl">‹</span></button>
+      <button class="visor-zona der" id="visorNext" type="button" aria-label="Siguiente"><span class="visor-fl">›</span></button>
+    </div>
+    <div class="visor-pie">
+      <div class="t"><b id="visorPieNom"></b><span id="visorPieSub"></span></div>
+      <a class="btn btn-1 btn-sm" id="visorCta" target="_blank" rel="noopener"></a>
+    </div>
+  </div>
+</div>
 <script>
 /* ============================================================
-   CONFIG — edita aquí nombres, plazas, links y media.
-   Los medios se listan tal cual existen en img/pN/.
-   Ojo: en GitHub Pages las mayúsculas importan (.mp4 ≠ .MP4).
+   CONFIG — todo el texto de la página vive acá.
+   Cambiar copy no exige tocar ni una línea de HTML.
    ============================================================ */
 const CONFIG = {
   botTelegram: "https://t.me/TonyShoppbot",
   hubTelegram: "https://t.me/mediaexclusiva",
-  mostrarBuscador: true
+  /* La portada al compartir (og:image) va estatica en el <head>:
+     los crawlers de Telegram y X no ejecutan JS. Si la cambias,
+     cambiala alli, en img/marca/og.jpg. */
+
+  cta: { comprar: "Comprar por Telegram", catalogo: "Ver el catálogo", hub: "Entrar al canal" },
+
+  hero: {
+    kicker: "Entrega automática · Bot 24/7",
+    /* <em> = la palabra en oro. Tres verbos, cero adorno: es
+       literalmente el proceso completo de compra. */
+    titulo: "Eliges.<br>Pagas.<br><em>Entras.</em>",
+    sub: "El bot te entrega el acceso en cuanto se confirma el pago. Sin esperas, sin formularios, sin hablar con nadie."
+  },
+
+  lineas: {
+    titulo: "Cuatro <em>líneas</em>. Elegí la tuya.",
+    sub: "Cada línea es un tipo de acceso distinto. Tocá una para ver todo lo que tiene adentro."
+  },
+
+  catalogo: {
+    titulo: "Todo lo que hay <em>hoy</em>",
+    sub: "Tocá cualquier portada para ver la muestra completa antes de comprar."
+  },
+
+  /* Los cuatro beneficios salen de las características reales de los
+     productos, no de un manual de marketing. */
+  porque: [
+    { ico: "img/marca/ben-rayo.png",   t: "Acceso inmediato",    d: "El bot entrega apenas se confirma el pago. No hay cola ni horario." },
+    { ico: "img/marca/ben-escudo.png", t: "Reposición incluida", d: "Si un acceso deja de funcionar, se repone sin costo." },
+    { ico: "img/marca/ben-caja.png",   t: "Fuera de Telegram",   d: "TonyExclusive vive fuera del grupo: si el grupo cae, tu acceso sigue vivo." },
+    { ico: "img/marca/ben-chat.png",   t: "Soporte directo",     d: "Escribís al mismo bot y te contesta una persona." }
+  ],
+
+  faq: {
+    titulo: "Las <em>dudas</em> de siempre",
+    items: [
+      { q: "¿Cómo me llega el acceso?",
+        a: "Tocás comprar, se abre el bot de Telegram y ahí se hace todo. En cuanto se confirma el pago, el bot entrega el acceso automáticamente." },
+      { q: "¿Tengo que pagar todos los meses?",
+        a: "En TonyExclusive no: es un pago único con acceso de por vida. No hay mensualidad ni renovación." },
+      { q: "¿Y si el grupo de Telegram se cae?",
+        a: "El material de TonyExclusive está alojado fuera de Telegram. Por eso el acceso sobrevive aunque el grupo desaparezca." },
+      { q: "¿Qué pasa si algo no funciona?",
+        a: "Hay reposición sin costo. Escribís al bot y se resuelve por ahí mismo." },
+      { q: "¿Dónde se paga?",
+        a: "Dentro de Telegram, en el mismo bot. No salís de la app y no cargás datos en ninguna web." }
+    ]
+  },
+
+  /* Sello de cada línea. Cambiar el archivo cambia el símbolo. */
+  sellos: {
+    "catalogo-mx": "img/marca/sim-pin.png",
+    "blackhub":    "img/marca/sim-ojo.png",
+    "tonyexclusive": "img/marca/sim-llave.png",
+    "elopicante":  "img/marca/sim-micro.png"
+  },
+
+  muestra: {
+    titulo: "Mirás antes de <em>pagar</em>.",
+    sub: "Las muestras están abiertas en el catálogo. No hay registro, no hay correo, no hay formulario."
+  },
+
+  /* Puerta de edad. Se muestra una vez y queda guardada en el
+     navegador. Añade fricción a propósito: es un sitio +18 y las
+     pasarelas de pago lo miran. */
+  puerta: {
+    activa: true,
+    titulo: "Contenido para mayores de 18",
+    texto: "Este sitio contiene material explícito. Al entrar confirmás que tenés 18 años o más.",
+    si: "Tengo 18 o más — entrar",
+    no: "Salir",
+    legal: "Al continuar aceptás ver contenido para adultos. Si sos menor de edad, salí de este sitio."
+  },
+
+  cierre: {
+    titulo: "No hay nada que llenar.<br>Sólo <em>entrar</em>.",
+    sub: "Abrís el bot, elegís y ya está adentro."
+  },
+
+  pie: "Compra segura vía Telegram"
 };
 
-/* Ojo: los nombres van en minúscula (.jpg / .mp4) porque GitHub Pages
-   distingue mayúsculas. En macOS no se nota, en packsmx.com sí. */
-const media = (p, nFotos, nVideos) => [
+/* ============================================================
+   DATOS — nombres, plazas, links y media.
+   Ojo: en GitHub Pages las mayúsculas importan (.mp4 ≠ .MP4).
+   ============================================================ */
+
+/* Los nombres van en minúscula (.jpg / .mp4) porque GitHub Pages
+   distingue mayúsculas. En macOS no se nota, en packsmx.com sí.
+
+   Varios videos están subidos como .MP4 y el catálogo los pedía en
+   minúscula: p9 a p12 (Elopicante entera) y 6 videos de Blackhub
+   daban 404 en producción y la tarjeta salía vacía. El cuarto
+   argumento lista qué videos van en MAYÚSCULA. Además abajo hay una
+   red de seguridad que reintenta con el otro caso, para que la
+   próxima subida no vuelva a romper la página en silencio. */
+const media = (p, nFotos, nVideos, mayus = []) => [
   ...Array.from({length:nFotos},  (_, i) => ({tipo:"imagen", src:`img/${p}/foto${i+1}.jpg`})),
-  ...Array.from({length:nVideos}, (_, i) => ({tipo:"video",  src:`img/${p}/video${i+1}.mp4`}))
+  ...Array.from({length:nVideos}, (_, i) => ({tipo:"video",
+    src:`img/${p}/video${i+1}.${mayus.includes(i+1) ? "MP4" : "mp4"}`}))
 ];
 
 const F_INMEDIATA = ["Entrega inmediata", "Soporte por Telegram"];
@@ -289,7 +762,7 @@ const F_EXCLUSIVE = ["Alojado fuera de Telegram", "Garantía de por vida", "Pago
 
 const SECTIONS = [
   {
-    id: "catalogo", titulo: "MX Filtradas",
+    id: "catalogo-mx", titulo: "MX Filtradas",
     kicker: "Packs filtrados de los 32 estados de la República Mexicana",
     productos: [
       { nombre: "Alessa", precio: "DURANGO", linkBot: "",
@@ -315,38 +788,34 @@ const SECTIONS = [
     productos: [
       { nombre: "Castings +18/-18", precio: "", linkBot: "",
         descripcion: "Descripción del producto 5.", caracteristicas: F_INMEDIATA,
-        media: media("p5", 0, 4) },
+        media: media("p5", 0, 4, [3,4]) },
       { nombre: "Dormidas", precio: "", linkBot: "",
         descripcion: "Descripción del producto 6.", caracteristicas: F_INMEDIATA,
         media: media("p6", 0, 4) },
       { nombre: "Prostitutas", precio: "", linkBot: "",
         descripcion: "Descripción del producto 7.", caracteristicas: F_INMEDIATA,
-        media: media("p7", 0, 3) },
+        media: media("p7", 0, 3, [1,2]) },
       { nombre: "OmeTV", precio: "", linkBot: "",
         descripcion: "Descripción del producto 8.", caracteristicas: F_INMEDIATA,
-        media: media("p8", 0, 4) }
+        media: media("p8", 0, 4, [2,3]) }
     ]
   },
   {
     id: "tonyexclusive", titulo: "TonyExclusive",
-    kicker: "Dad and daugther / Padre y hija Pedomom Brother and sister / hermano y hermana Solo teen Teen blow jobs Young girls and young boys Incest / incesto Lesbians / lesbianas",
+    kicker: "Contenido exclusivo alojado fuera de Telegram • Acceso de por vida • Un solo pago",
     productos: [
       { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
-        caracteristicas: F_EXCLUSIVE,
-        media: media("p13", 0, 1) },
+        caracteristicas: F_EXCLUSIVE, media: media("p13", 0, 1) },
       { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
-        caracteristicas: F_EXCLUSIVE,
-        media: media("p14", 0, 1) },
+        caracteristicas: F_EXCLUSIVE, media: media("p14", 0, 1) },
       { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
-        caracteristicas: F_EXCLUSIVE,
-        media: media("p15", 0, 1) },
+        caracteristicas: F_EXCLUSIVE, media: media("p15", 0, 1) },
       { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
-        caracteristicas: F_EXCLUSIVE,
-        media: media("p16", 0, 1) }
+        caracteristicas: F_EXCLUSIVE, media: media("p16", 0, 1) }
     ]
   },
   {
@@ -355,203 +824,568 @@ const SECTIONS = [
     productos: [
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 9.", caracteristicas: F_INMEDIATA,
-        media: media("p9", 0, 1) },
+        media: media("p9", 0, 1, [1]) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 10.", caracteristicas: F_INMEDIATA,
-        media: media("p10", 0, 1) },
+        media: media("p10", 0, 1, [1]) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 11.", caracteristicas: F_INMEDIATA,
-        media: media("p11", 0, 1) },
+        media: media("p11", 0, 1, [1]) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 12.", caracteristicas: F_INMEDIATA,
-        media: media("p12", 0, 1) }
+        media: media("p12", 0, 1, [1]) }
     ]
   }
 ];
 
-const TICKER = ["Entrega automática","★","Soporte 24/7","★","Compra vía Telegram","★","Cobertura nacional","★"];
-
 /* ---------- helpers ---------- */
 const $ = (s) => document.querySelector(s);
+const $$ = (s) => Array.from(document.querySelectorAll(s));
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const linkDe = (p) => (p.linkBot && p.linkBot.trim()) ? p.linkBot : CONFIG.botTelegram;
+const menosMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const ahorroDatos = !!(navigator.connection && navigator.connection.saveData);
 
-/* Lista plana: el lightbox se abre por índice global. */
+/* Red de seguridad de mayúsculas: si un archivo da 404 se reintenta
+   una vez con la extensión en el otro caso. No reemplaza revisar el
+   nombre; evita que la página quede en blanco. */
+document.addEventListener("error", (e) => {
+  const el = e.target;
+  if (!el || (el.tagName !== "IMG" && el.tagName !== "VIDEO")) return;
+  if (el.dataset.reintento) return;
+  const s = el.getAttribute("src") || "";
+  const corte = s.indexOf("#");
+  const base = corte < 0 ? s : s.slice(0, corte);
+  const cola = corte < 0 ? "" : s.slice(corte);
+  const m = base.match(/\.([A-Za-z0-9]+)$/);
+  if (!m) return;
+  const ext = m[1];
+  const otro = ext === ext.toLowerCase() ? ext.toUpperCase() : ext.toLowerCase();
+  if (otro === ext) return;
+  el.dataset.reintento = "1";
+  el.src = base.slice(0, -ext.length) + otro + cola;
+}, true);
+
+/* Lista plana: el visor se abre por índice global. */
 const FLAT = [];
 SECTIONS.forEach((s, si) => s.productos.forEach((p) => FLAT.push({p, si})));
 
-const TG_SVG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
+/* Los únicos números de la página. Se cuentan, no se declaran. */
+const STATS = FLAT.reduce((a, {p}) => {
+  p.media.forEach((m) => m.tipo === "imagen" ? a.fotos++ : a.videos++);
+  return a;
+}, {fotos: 0, videos: 0});
+STATS.productos = FLAT.length;
+STATS.lineas = SECTIONS.length;
 
-/* Etiqueta "🖼 9 fotos · 4 videos" */
-function mediaLabel(media) {
-  const imgs = media.filter((m) => m.tipo === "imagen").length;
-  const vids = media.length - imgs;
-  const parts = [];
-  if (imgs) parts.push(imgs + (imgs === 1 ? " foto" : " fotos"));
-  if (vids) parts.push(vids + (vids === 1 ? " video" : " videos"));
-  if (!parts.length) return "";
-  return "🖼 " + parts.join(" · ");
+const TG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
+const MARCA = '<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>';
+
+const nombreDe = (p, si) => p.nombre || SECTIONS[si].titulo;
+function etiquetaMedia(m) {
+  const i = m.filter((x) => x.tipo === "imagen").length, v = m.length - i, t = [];
+  if (i) t.push(i + (i === 1 ? " foto" : " fotos"));
+  if (v) t.push(v + (v === 1 ? " video" : " videos"));
+  return t.join(" · ");
 }
-
-/* Portada: primera foto; si el producto es sólo video, el primer video
-   con #t=0.1 para que el navegador pinte un fotograma. */
-function coverHTML(p) {
+/* Portada: primera foto; si es sólo video, el primer video con #t=0.1
+   para que el navegador pinte un fotograma sin descargarlo entero. */
+function portada(p, alt) {
   const foto = p.media.find((m) => m.tipo === "imagen");
-  if (foto) return `<img src="${esc(foto.src)}" alt="${esc(p.nombre)}" loading="lazy">`;
-  const vid = p.media[0];
-  if (!vid) return "";
-  return `<video src="${esc(vid.src)}#t=0.1" muted playsinline preload="metadata" tabindex="-1"></video>`;
+  if (foto) return `<img src="${esc(foto.src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
+  const v = p.media[0];
+  if (!v) return "";
+  return `<video src="${esc(v.src)}#t=0.1" muted loop playsinline preload="metadata" tabindex="-1" aria-label="${esc(alt)}"></video>`;
 }
 
-/* ---------- render catálogo ---------- */
+/* ---------- guardados ---------- *
+   Marcador real en localStorage. Los únicos números de la página son
+   los que se pueden contar: fotos, videos, productos, guardados. */
+const GKEY = "tonyshop:guardados";
+let GUARDADOS = new Set();
+try { GUARDADOS = new Set(JSON.parse(localStorage.getItem(GKEY) || "[]")); } catch (e) {}
+let soloGuardados = false;
+const claveDe = (i) => {
+  const {p, si} = FLAT[i];
+  return SECTIONS[si].id + ":" + (p.media[0] ? p.media[0].src : i);
+};
+function alternarGuardado(i, btn) {
+  const k = claveDe(i);
+  GUARDADOS.has(k) ? GUARDADOS.delete(k) : GUARDADOS.add(k);
+  try { localStorage.setItem(GKEY, JSON.stringify([...GUARDADOS])); } catch (e) {}
+  btn.classList.toggle("on", GUARDADOS.has(k));
+  btn.setAttribute("aria-pressed", GUARDADOS.has(k));
+  btn.classList.remove("late"); void btn.offsetWidth; btn.classList.add("late");
+  pintarGuardados();
+  if (soloGuardados) render();
+}
+function pintarGuardados() {
+  $("#nGuardados").textContent = GUARDADOS.size ? " " + GUARDADOS.size : "";
+  $("#chipGuardados").hidden = GUARDADOS.size === 0 && !soloGuardados;
+}
+
+/* ---------- catálogo editorial ---------- *
+   El primero de cada línea sale al doble de tamaño: rompe la
+   cuadrícula uniforme y da un punto de entrada por sección. */
 function render() {
   const q = $("#q").value.trim().toLowerCase();
-  const match = (p) => !q || (p.nombre + " " + p.descripcion + " " + p.precio).toLowerCase().includes(q);
+  const coincide = (p, si) =>
+    !q || (p.nombre + " " + p.precio + " " + SECTIONS[si].titulo).toLowerCase().includes(q);
 
   let total = 0;
   const html = SECTIONS.map((s, si) => {
-    const rows = FLAT.map((e, i) => ({...e, i})).filter((e) => e.si === si && match(e.p));
-    if (!rows.length) return "";
-    total += rows.length;
+    const filas = FLAT.map((e, i) => ({...e, i}))
+      .filter((e) => e.si === si && coincide(e.p, si) && (!soloGuardados || GUARDADOS.has(claveDe(e.i))));
+    if (!filas.length) return "";
+    total += filas.length;
 
-    const cards = rows.map(({p, i}) => `
-      <article class="card">
-        <div class="cover" data-open="${i}">
-          <div class="ph"><span>foto producto</span></div>
-          ${coverHTML(p)}
-          <div class="shade"></div>
-          <span class="medialabel">${esc(mediaLabel(p.media))}</span>
+    const fichas = filas.map(({p, i}, k) => {
+      const nom = nombreDe(p, si);
+      const vids = p.media.filter((m) => m.tipo === "video").length;
+      const guardado = GUARDADOS.has(claveDe(i));
+      return `
+      <article class="ficha rv${k === 0 ? " destacada" : ""}" style="transition-delay:${Math.min(k, 5) * 60}ms">
+        <div class="lienzo" data-abrir="${i}" role="button" tabindex="0" aria-label="Ver muestra de ${esc(nom)}">
+          <div class="hueco"><span>muestra</span></div>
+          ${portada(p, nom)}
+          <div class="lienzo-velo"></div>
+          ${vids ? '<span class="reproduce" aria-hidden="true">▶</span>' : ""}
+          ${vids ? '<span class="barra" aria-hidden="true"><i></i></span>' : ""}
+          <span class="cuenta">${esc(etiquetaMedia(p.media))}</span>
         </div>
-        <div class="body">
-          ${p.nombre ? `<h3 class="name">${esc(p.nombre)}</h3>` : ""}
-          ${p.precio ? `<div class="price"><i></i><b>${esc(p.precio)}</b></div>` : ""}
-          <ul class="feats">
-            ${p.caracteristicas.map((f) => `<li><i>✓</i><span>${esc(f)}</span></li>`).join("")}
-          </ul>
-          <a class="buy" href="${esc(linkDe(p))}" target="_blank" rel="noopener">
-            ${TG_SVG}<span>Comprar por Telegram</span>
+        <button class="marcador${guardado ? " on" : ""}" data-guardar="${i}" type="button"
+                aria-pressed="${guardado}" aria-label="Guardar ${esc(nom)}">${MARCA}</button>
+        <div class="ficha-pie">
+          <span class="ficha-cat">${esc(s.titulo)}</span>
+          <h4 class="ficha-nom">${esc(nom)}</h4>
+          ${p.precio ? `<span class="plaza"><i></i><b>${esc(p.precio)}</b></span>` : ""}
+          <span class="gana"><i>✓</i><span>${esc(p.caracteristicas[0])}</span></span>
+          <a class="btn btn-1 btn-sm" href="${esc(linkDe(p))}" target="_blank" rel="noopener">
+            ${TG}<span>${esc(CONFIG.cta.comprar)}</span>
           </a>
         </div>
-      </article>`).join("");
+      </article>`;
+    }).join("");
 
     return `
-      <section class="sec" id="${esc(s.id)}">
-        <div class="sec-head">
-          <h2>${esc(s.titulo)}</h2>
-          <span class="sec-kicker">${esc(s.kicker)}</span>
-          <div class="spacer"></div>
-          <span class="sec-count">${rows.length} ${rows.length === 1 ? "producto" : "productos"}</span>
-        </div>
-        <div class="sec-bar"></div>
-        <div class="grid">${cards}</div>
-      </section>`;
+      <div class="linea-sec rv">
+        <h3 id="linea-${esc(s.id)}">${esc(s.titulo)}</h3>
+        <span class="rayita"></span>
+        <span class="cnt">${filas.length} ${filas.length === 1 ? "acceso" : "accesos"}</span>
+      </div>
+      <p class="linea-desc rv">${esc(s.kicker)}</p>
+      <div class="rej">${fichas}</div>`;
   }).join("");
 
-  $("#cat").innerHTML = html;
-  $("#empty").hidden = total > 0;
-  $("#count").textContent = total + (total === 1 ? " producto" : " productos");
+  $("#listado").innerHTML = html;
+  $("#vacio").hidden = total > 0;
+  $("#cuentaTotal").textContent = total + (total === 1 ? " acceso" : " accesos");
+  observar();
 }
 
-/* ---------- lightbox ---------- */
-let lbIdx = null, lbPos = 0;
+/* Las cifras suben hasta su valor real al entrar en pantalla. El
+   número final es el mismo que se cuenta de SECTIONS: la animación no
+   inventa nada, sólo lo pone en movimiento. */
+function contar(el) {
+  if (el.dataset.contando) return;
+  const fin = parseInt(el.textContent, 10);
+  if (!isFinite(fin) || menosMov) return;
+  el.dataset.contando = "1";
+  /* El texto sólo se toca dentro del primer frame. Si requestAnimationFrame
+     nunca llega a correr (pestaña en segundo plano), el número real se
+     queda escrito en vez de congelarse en 0. */
+  const dur = 900;
+  let t0 = null;
+  const paso = (t) => {
+    if (t0 === null) t0 = t;
+    const k = Math.min(1, (t - t0) / dur);
+    el.textContent = Math.round(fin * (1 - Math.pow(1 - k, 3)));
+    if (k < 1) requestAnimationFrame(paso);
+  };
+  requestAnimationFrame(paso);
+}
 
-function abrirLb(i) {
-  lbIdx = i; lbPos = 0;
-  $("#lb").hidden = false;
+/* ---------- observadores ---------- */
+const obsRv = new IntersectionObserver((es) => {
+  es.forEach((e) => {
+    if (!e.isIntersecting) return;
+    e.target.classList.add("on");
+    e.target.querySelectorAll("[data-contar]").forEach(contar);
+    obsRv.unobserve(e.target);
+  });
+}, {rootMargin: "0px 0px -6% 0px", threshold: .06});
+
+/* Sólo se reproduce lo que está de verdad a la vista. Con 32 videos
+   sueltos, dejarlos todos corriendo arrastra cualquier teléfono; y
+   con ahorro de datos activado no se reproduce ninguno. */
+const obsVid = new IntersectionObserver((es) => {
+  es.forEach((e) => {
+    const v = e.target.querySelector("video");
+    if (!v) return;
+    if (e.isIntersecting && e.intersectionRatio > .55) {
+      v.muted = true;
+      const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+      e.target.classList.add("viva");
+    } else { v.pause(); e.target.classList.remove("viva"); }
+  });
+}, {threshold: [0, .55]});
+
+function observar() {
+  $$(".rv:not(.on)").forEach((el) => obsRv.observe(el));
+  if (!menosMov && !ahorroDatos) $$(".ficha").forEach((el) => { if (el.querySelector("video")) obsVid.observe(el); });
+  if (!menosMov && matchMedia("(hover:hover)").matches) {
+    $$(".lienzo").forEach(scrub);
+    $$(".btn-1").forEach(iman);
+  }
+}
+
+/* El eje X del cursor manda sobre el tiempo del video. Se pausa la
+   reproducción automática mientras se rebobina y se reanuda al salir. */
+function scrub(lienzo) {
+  if (lienzo.dataset.scrub) return;
+  const v = lienzo.querySelector("video");
+  if (!v) return;
+  lienzo.dataset.scrub = "1";
+  const barra = lienzo.querySelector(".barra i");
+  lienzo.addEventListener("pointermove", (e) => {
+    if (!isFinite(v.duration) || v.duration <= 0) return;
+    const r = lienzo.getBoundingClientRect();
+    const t = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+    if (!v.paused) v.pause();
+    v.currentTime = t * v.duration;
+    if (barra) barra.style.width = (t * 100) + "%";
+  });
+  lienzo.addEventListener("pointerleave", () => {
+    const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+  });
+}
+
+/* Botón magnético: se desplaza unos píxeles hacia el cursor. Poco —
+   pasado de 6px deja de sentirse fino y empieza a molestar al hacer clic. */
+function iman(btn) {
+  if (btn.dataset.iman) return;
+  btn.dataset.iman = "1";
+  btn.addEventListener("pointermove", (e) => {
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left - r.width / 2) / r.width;
+    const y = (e.clientY - r.top - r.height / 2) / r.height;
+    btn.style.transform = `translate(${x * 9}px, ${y * 6}px)`;
+  });
+  btn.addEventListener("pointerleave", () => { btn.style.transform = ""; });
+}
+
+/* ---------- visor ---------- *
+   Barras de progreso arriba, zonas táctiles a los lados, la foto
+   avanza sola a los 4.5 s y el video manda su propia duración. Al
+   terminar un producto salta al siguiente: se sigue mirando sin
+   volver a la rejilla. */
+let vIdx = null, vPos = 0, vTimer = null, vSonido = false, vMorph = false;
+
+/* Abre el visor haciendo crecer la propia portada hasta pantalla
+   completa (View Transitions). Si el navegador no lo soporta, o hay
+   preferencia de menos movimiento, abre normal. */
+function abrirDesde(i, lienzo) {
+  const media = lienzo.querySelector("img,video");
+  if (menosMov || !document.startViewTransition || !media) { abrirVisor(i); return; }
+  media.style.viewTransitionName = "media-activa";
+  vMorph = true;
+  const t = document.startViewTransition(() => {
+    media.style.viewTransitionName = "";
+    abrirVisor(i);
+  });
+  const limpiar = () => {
+    vMorph = false;
+    media.style.viewTransitionName = "";
+    const m = $("#visorTela").querySelector(".visor-media");
+    if (m) m.style.viewTransitionName = "";
+  };
+  /* startViewTransition expone .ready ademas de .finished. Si la
+     transicion se aborta (pestaña oculta, dos clics seguidos) y nadie
+     escucha .ready, queda una promesa sin capturar y salta un error en
+     consola. Se silencia: abortar no es un fallo, sólo no hay morph. */
+  if (t.ready && t.ready.catch) t.ready.catch(() => {});
+  t.finished.then(limpiar, limpiar);
+}
+const DUR_FOTO = 4500;
+
+function abrirVisor(i) {
+  vIdx = i; vPos = 0;
+  $("#visor").hidden = false;
   document.body.style.overflow = "hidden";
-  pintarLb();
+  pintarVisor();
 }
-function cerrarLb() {
-  lbIdx = null;
-  $("#lb").hidden = true;
+function cerrarVisor() {
+  vIdx = null; clearTimeout(vTimer);
+  $("#visor").hidden = true;
   document.body.style.overflow = "";
-  const v = $("#lbStage").querySelector("video.lb-media");
+  const v = $("#visorTela").querySelector("video.visor-media");
   if (v) v.pause();
 }
-function pasoLb(d) {
-  if (lbIdx === null) return;
-  const n = FLAT[lbIdx].p.media.length;
-  lbPos = ((lbPos + d) % n + n) % n;
-  pintarLb();
-}
-
-function pintarLb() {
-  if (lbIdx === null) return;
-  const p = FLAT[lbIdx].p;
-  const cur = p.media[lbPos];
-
-  $("#lbName").textContent = p.nombre;
-  $("#lbCounter").textContent = `${lbPos + 1} / ${p.media.length}`;
-  $("#lbBuy").href = linkDe(p);
-  $("#lbBuy").textContent = p.precio ? `${p.precio} · Comprar` : "Comprar";
-  $("#lbSlot").textContent = cur ? (cur.tipo === "video" ? "video producto" : "foto producto") : "";
-
-  const viejo = $("#lbStage").querySelector(".lb-media");
-  if (viejo) viejo.remove();
-  if (cur) {
-    const el = document.createElement(cur.tipo === "video" ? "video" : "img");
-    el.className = "lb-media";
-    el.src = cur.src;
-    if (cur.tipo === "video") { el.controls = true; el.playsInline = true; el.preload = "metadata"; }
-    else { el.alt = p.nombre; }
-    $("#lbStage").insertBefore(el, $("#lbPrev"));
+function pasoVisor(d) {
+  if (vIdx === null) return;
+  const n = FLAT[vIdx].p.media.length;
+  const sig = vPos + d;
+  if (sig >= n) {
+    if (vIdx + 1 < FLAT.length) { vIdx++; vPos = 0; pintarVisor(); } else cerrarVisor();
+    return;
   }
-
-  const unaSola = p.media.length < 2;
-  $("#lbPrev").hidden = unaSola;
-  $("#lbNext").hidden = unaSola;
-
-  $("#lbThumbs").innerHTML = p.media.map((m, k) => `
-    <div class="lb-thumb${k === lbPos ? " on" : ""}" data-go="${k}">
-      <div class="ph"></div>
-      ${m.tipo === "imagen"
-        ? `<img src="${esc(m.src)}" alt="" loading="lazy">`
-        : `<video src="${esc(m.src)}#t=0.1" muted playsinline preload="metadata" tabindex="-1"></video><div class="lb-play">▶</div>`}
-    </div>`).join("");
-
-  const activo = $("#lbThumbs").querySelector(".lb-thumb.on");
-  if (activo) activo.scrollIntoView({block: "nearest", inline: "nearest"});
+  if (sig < 0) {
+    if (vIdx > 0) { vIdx--; vPos = Math.max(0, FLAT[vIdx].p.media.length - 1); pintarVisor(); }
+    return;
+  }
+  vPos = sig; pintarVisor();
 }
 
-/* ---------- arranque ---------- */
-$("#botTop").href = CONFIG.botTelegram;
-$("#hub").href = CONFIG.hubTelegram;
-$("#nav").innerHTML = SECTIONS.map((s) => `<a href="#${esc(s.id)}">${esc(s.titulo)}</a>`).join("");
-$("#ticker").innerHTML = TICKER.concat(TICKER).map((t) => `<span>${esc(t)}</span>`).join("");
-$("#foot").textContent = "© " + new Date().getFullYear() + " — Compra segura vía Telegram";
-$("#searchBox").hidden = !CONFIG.mostrarBuscador;
+function pintarVisor() {
+  if (vIdx === null) return;
+  clearTimeout(vTimer);
+  const {p, si} = FLAT[vIdx];
+  const cur = p.media[vPos];
+  const nom = nombreDe(p, si);
 
+  $("#visorSig").textContent = SECTIONS[si].titulo.charAt(0);
+  $("#visorNom").textContent = nom;
+  $("#visorSub").textContent = `${SECTIONS[si].titulo} · ${vPos + 1}/${p.media.length}`;
+  $("#visorPieNom").textContent = nom;
+  $("#visorPieSub").textContent = p.precio || etiquetaMedia(p.media);
+  $("#visorCta").href = linkDe(p);
+  $("#visorCta").innerHTML = TG + "<span>" + esc(p.precio ? p.precio + " · Comprar" : CONFIG.cta.comprar) + "</span>";
+  $("#visorHueco").textContent = cur ? (cur.tipo === "video" ? "video" : "foto") : "";
+  $("#visorSon").hidden = !cur || cur.tipo !== "video";
+  $("#visorSon").textContent = vSonido ? "🔊" : "🔇";
+
+  $("#visorBarras").innerHTML = p.media
+    .map((m, k) => `<i class="${k < vPos ? "hecha" : k === vPos ? "activa" : ""}"><b></b></i>`).join("");
+  const activa = $("#visorBarras").querySelector(".activa");
+
+  $("#visorTela").querySelectorAll(".visor-media,.visor-fondo").forEach((n) => n.remove());
+  if (!cur) return;
+
+  /* fondo borroso del propio medio: rellena los costados sin barras
+     negras cuando el video es vertical y la caja no. */
+  const fondo = document.createElement(cur.tipo === "video" ? "video" : "img");
+  fondo.className = "visor-fondo";
+  fondo.src = cur.src + (cur.tipo === "video" ? "#t=0.1" : "");
+  fondo.setAttribute("aria-hidden", "true");
+  if (cur.tipo === "video") { fondo.muted = true; fondo.playsInline = true; fondo.preload = "metadata"; }
+  $("#visorTela").insertBefore(fondo, $("#visorPrev"));
+
+  const el = document.createElement(cur.tipo === "video" ? "video" : "img");
+  el.className = "visor-media";
+  el.src = cur.src;
+  if (vMorph) el.style.viewTransitionName = "media-activa";
+  if (cur.tipo === "video") {
+    el.controls = true; el.playsInline = true; el.preload = "metadata";
+    el.muted = !vSonido; el.autoplay = true;
+    el.addEventListener("loadedmetadata", () => {
+      if (activa && isFinite(el.duration) && el.duration > 0) activa.style.setProperty("--dur", el.duration + "s");
+    });
+    el.addEventListener("ended", () => pasoVisor(1));
+    const pr = el.play(); if (pr && pr.catch) pr.catch(() => {});
+  } else {
+    el.alt = `Muestra de ${nom}`;
+    if (activa) activa.style.setProperty("--dur", DUR_FOTO + "ms");
+    if (!menosMov) vTimer = setTimeout(() => pasoVisor(1), DUR_FOTO);
+  }
+  $("#visorTela").insertBefore(el, $("#visorPrev"));
+}
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+const T = (id, v) => { const n = document.getElementById(id); if (n) n.innerHTML = v; };
+
+/* --- hero --- */
+T("heroKicker", esc(CONFIG.hero.kicker));
+T("heroTitulo", CONFIG.hero.titulo);
+T("heroSub", esc(CONFIG.hero.sub));
+T("heroPie", [
+  [STATS.productos, "accesos"], [STATS.lineas, "líneas"],
+  [STATS.fotos, "fotos"], [STATS.videos, "videos"]
+].map(([n, t]) => `<div><b data-contar>${n}</b><span>${t}</span></div>`).join(""));
+/* el hero no espera al observer: está sobre la línea de flotación */
+setTimeout(() => $$("#heroPie [data-contar]").forEach(contar), 380);
+
+/* --- mosaico del hero: el material real, no un render --- *
+   Se repiten pocas fotos distintas a propósito: el navegador las
+   cachea y el hero pesa lo que pesan 6 imágenes, no 18. */
+(function mosaico() {
+  const fotos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "imagen").map((m) => m.src));
+  if (!fotos.length) return;
+  const base = fotos.filter((_, i) => i % Math.max(1, Math.floor(fotos.length / 6)) === 0).slice(0, 6);
+  const tot = 18;
+  T("mosaico", Array.from({length: tot}, (_, i) =>
+    `<div class="${i % 2 ? "cl" : ""}"><img src="${esc(base[i % base.length])}" alt="" loading="${i < 6 ? "eager" : "lazy"}" decoding="async"></div>`
+  ).join(""));
+})();
+
+/* --- cinta de datos --- */
+T("cintaIn", [
+  [STATS.productos, "Accesos"], [STATS.lineas, "Líneas"],
+  [STATS.fotos, "Fotos de muestra"], [STATS.videos, "Videos de muestra"]
+].map(([n, t]) => `<div class="cinta-it rv"><b data-contar>${n}</b><span>${t}</span></div>`).join(""));
+
+/* --- líneas --- */
+T("catsTitulo", CONFIG.lineas.titulo);
+T("catsSub", esc(CONFIG.lineas.sub));
+T("cats", SECTIONS.map((s) => {
+  const p = s.productos[0];
+  const sello = CONFIG.sellos[s.id];
+  return `<a class="cat rv" href="#linea-${esc(s.id)}">
+    <span class="cat-med">${portada(p, s.titulo)}</span>
+    <span class="cat-velo"></span>
+    ${sello ? `<span class="cat-sello"><img src="${esc(sello)}" alt="" loading="lazy"></span>` : ""}
+    <span class="cat-n">${s.productos.length} ${s.productos.length === 1 ? "acceso" : "accesos"}</span>
+    <span class="cat-txt"><h3>${esc(s.titulo)}</h3><p>${esc(s.kicker)}</p></span>
+  </a>`;
+}).join(""));
+
+/* --- catálogo --- */
+T("catTitulo", CONFIG.catalogo.titulo);
+T("catSub", esc(CONFIG.catalogo.sub));
+
+/* --- beneficios --- */
+T("porqueRej", CONFIG.porque.map((b) =>
+  `<div class="porque-it rv"><span class="ico"><img src="${esc(b.ico)}" alt="" loading="lazy"></span><b>${esc(b.t)}</b><p>${esc(b.d)}</p></div>`
+).join(""));
+
+/* --- faq --- */
+T("faqTitulo", CONFIG.faq.titulo);
+T("faqLista", CONFIG.faq.items.map((f, i) => `
+  <div class="faq-it rv">
+    <button class="faq-q" type="button" data-faq="${i}" aria-expanded="false" aria-controls="faq-a-${i}">
+      <span>${esc(f.q)}</span><span class="mas" aria-hidden="true"></span>
+    </button>
+    <div class="faq-a" id="faq-a-${i}"><div><p>${esc(f.a)}</p></div></div>
+  </div>`).join(""));
+
+/* --- banda de muestra: tus fotos reales, censuradas --- *
+   Se duplica la lista para que el desfile sea continuo. Sólo se usan
+   fotos ya presentes en el catálogo, nada generado. */
+T("muestraTitulo", CONFIG.muestra.titulo);
+T("muestraSub", esc(CONFIG.muestra.sub));
+$("#ctaMuestra").textContent = CONFIG.cta.catalogo;
+(function tira() {
+  const fotos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "imagen").map((m) => m.src));
+  const videos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "video").map((m) => m.src));
+  const lista = fotos.concat(videos.slice(0, 6));
+  if (!lista.length) return;
+  const uno = (src, i) => src.endsWith(".jpg")
+    ? `<span class="muestra-it"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></span>`
+    : `<span class="muestra-it"><video src="${esc(src)}#t=0.1" muted playsinline preload="metadata" tabindex="-1"></video></span>`;
+  T("muestraTira", lista.map(uno).join("") + lista.map(uno).join(""));
+})();
+
+/* --- cierre y pie --- */
+T("cierreTitulo", CONFIG.cierre.titulo);
+T("cierreSub", esc(CONFIG.cierre.sub));
+T("pie", `© ${new Date().getFullYear()} TonyShop — ${esc(CONFIG.pie)} · <a href="${esc(CONFIG.hubTelegram)}" target="_blank" rel="noopener">Canal oficial</a>`);
+
+/* --- navegación y CTAs --- */
+T("navLinks", SECTIONS.map((s) => `<a href="#linea-${esc(s.id)}">${esc(s.titulo)}</a>`).join(""));
+[["ctaNav", CONFIG.cta.comprar], ["ctaHero1", CONFIG.cta.comprar],
+ ["ctaFinal1", CONFIG.cta.comprar], ["ctaMovil", CONFIG.cta.comprar]].forEach(([id, txt]) => {
+  const n = document.getElementById(id);
+  n.href = CONFIG.botTelegram;
+  n.innerHTML = TG + "<span>" + esc(txt) + "</span>";
+});
+$("#ctaHero2").textContent = CONFIG.cta.catalogo;
+$("#ctaFinal2").href = CONFIG.hubTelegram;
+$("#ctaFinal2").textContent = CONFIG.cta.hub;
+
+/* --- puerta de edad --- */
+const PKEY = "tonyshop:edad";
+(function puerta() {
+  const el = $("#puerta");
+  let ok = false;
+  try { ok = localStorage.getItem(PKEY) === "1"; } catch (e) { ok = true; }
+  if (!CONFIG.puerta.activa || ok) { el.remove(); return; }
+  T("puertaTit", esc(CONFIG.puerta.titulo));
+  T("puertaTxt", esc(CONFIG.puerta.texto));
+  T("puertaLegal", esc(CONFIG.puerta.legal));
+  $("#puertaSi").textContent = CONFIG.puerta.si;
+  $("#puertaNo").textContent = CONFIG.puerta.no;
+  el.hidden = false;
+  document.body.style.overflow = "hidden";
+  $("#puertaSi").addEventListener("click", () => {
+    try { localStorage.setItem(PKEY, "1"); } catch (e) {}
+    el.remove();
+    document.body.style.overflow = "";
+  });
+})();
+
+pintarGuardados();
 render();
+observar();
 
+/* --- navbar: opaca al bajar, marca la línea visible --- */
+const alScroll = () => {
+  $("#nav").classList.toggle("pegado", scrollY > 10);
+  let act = "";
+  SECTIONS.forEach((s) => {
+    const el = document.getElementById("linea-" + s.id);
+    if (el && el.getBoundingClientRect().top <= 150) act = s.id;
+  });
+  $$("#navLinks a").forEach((a) => a.classList.toggle("act", a.getAttribute("href") === "#linea-" + act));
+};
+addEventListener("scroll", alScroll, {passive: true});
+alScroll();
+
+/* --- eventos --- */
 $("#q").addEventListener("input", render);
-$("#cat").addEventListener("click", (e) => {
-  const t = e.target.closest("[data-open]");
-  if (t) abrirLb(Number(t.dataset.open));
+$("#chipGuardados").addEventListener("click", () => {
+  soloGuardados = !soloGuardados;
+  $("#chipGuardados").classList.toggle("on", soloGuardados);
+  pintarGuardados(); render();
 });
-$("#lb").addEventListener("click", (e) => { if (e.target === $("#lb")) cerrarLb(); });
-$("#lbClose").addEventListener("click", cerrarLb);
-$("#lbPrev").addEventListener("click", () => pasoLb(-1));
-$("#lbNext").addEventListener("click", () => pasoLb(1));
-$("#lbThumbs").addEventListener("click", (e) => {
-  const t = e.target.closest("[data-go]");
-  if (t) { lbPos = Number(t.dataset.go); pintarLb(); }
+$("#arriba").addEventListener("click", () => scrollTo({top: 0, behavior: menosMov ? "auto" : "smooth"}));
+
+$("#listado").addEventListener("click", (e) => {
+  const g = e.target.closest("[data-guardar]");
+  if (g) { alternarGuardado(Number(g.dataset.guardar), g); return; }
+  const a = e.target.closest("[data-abrir]");
+  if (a) abrirDesde(Number(a.dataset.abrir), a);
 });
-window.addEventListener("keydown", (e) => {
-  if (lbIdx === null) return;
-  if (e.key === "Escape") cerrarLb();
-  if (e.key === "ArrowRight") pasoLb(1);
-  if (e.key === "ArrowLeft") pasoLb(-1);
+$("#listado").addEventListener("keydown", (e) => {
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const a = e.target.closest("[data-abrir]");
+  if (a) { e.preventDefault(); abrirDesde(Number(a.dataset.abrir), a); }
 });
 
-/* Swipe en móvil sobre el visor. */
+$("#faqLista").addEventListener("click", (e) => {
+  const b = e.target.closest("[data-faq]");
+  if (!b) return;
+  const it = b.closest(".faq-it");
+  const abierta = it.classList.toggle("abierta");
+  b.setAttribute("aria-expanded", abierta);
+});
+
+$("#visor").addEventListener("click", (e) => { if (e.target === $("#visor")) cerrarVisor(); });
+$("#visorCerrar").addEventListener("click", cerrarVisor);
+$("#visorPrev").addEventListener("click", () => pasoVisor(-1));
+$("#visorNext").addEventListener("click", () => pasoVisor(1));
+$("#visorSon").addEventListener("click", () => {
+  vSonido = !vSonido;
+  $("#visorSon").textContent = vSonido ? "🔊" : "🔇";
+  const v = $("#visorTela").querySelector("video.visor-media");
+  if (v) { v.muted = !vSonido; if (vSonido) { const pr = v.play(); if (pr && pr.catch) pr.catch(() => {}); } }
+});
+addEventListener("keydown", (e) => {
+  if (vIdx === null) return;
+  if (e.key === "Escape") cerrarVisor();
+  if (e.key === "ArrowRight") pasoVisor(1);
+  if (e.key === "ArrowLeft") pasoVisor(-1);
+});
+
+/* Swipe: horizontal pasa, vertical hacia abajo cierra. */
 let tx = 0, ty = 0;
-$("#lbStage").addEventListener("touchstart", (e) => {
+$("#visorTela").addEventListener("touchstart", (e) => {
   tx = e.changedTouches[0].clientX; ty = e.changedTouches[0].clientY;
 }, {passive: true});
-$("#lbStage").addEventListener("touchend", (e) => {
-  const dx = e.changedTouches[0].clientX - tx;
-  const dy = e.changedTouches[0].clientY - ty;
-  if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)) pasoLb(dx < 0 ? 1 : -1);
+$("#visorTela").addEventListener("touchend", (e) => {
+  const dx = e.changedTouches[0].clientX - tx, dy = e.changedTouches[0].clientY - ty;
+  if (dy > 95 && Math.abs(dy) > Math.abs(dx)) { cerrarVisor(); return; }
+  if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)) pasoVisor(dx < 0 ? 1 : -1);
 }, {passive: true});
 </script>
 </body>
