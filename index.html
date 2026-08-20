@@ -700,6 +700,24 @@ const CONFIG = {
     ]
   },
 
+  /* ---------------- MEDICIÓN ----------------
+     Sin esto no hay forma de saber si la web vende. Mide dos cosas:
+     cuánta gente llega y cuánta toca "Comprar por Telegram".
+
+     goatcounter: tu código de cuenta (gratis, sin cookies, ~3 KB).
+       Se crea en goatcounter.com; si tu código es "tonyshop", aquí va
+       "tonyshop". Vacío = no se envía nada a ningún sitio.
+
+     marcarBoton: añade ?start=web_<sitio> a los enlaces del bot para
+       saber qué botón trajo a cada persona. OJO: sólo funciona si tu
+       bot acepta "/start algo". Si tu bot compara el mensaje con
+       "/start" exacto, dejará de responder. Compruébalo antes de
+       ponerlo en true. */
+  analitica: {
+    goatcounter: "",
+    marcarBoton: false
+  },
+
   /* Sello de cada línea. Cambiar el archivo cambia el símbolo. */
   sellos: {
     "catalogo-mx": "img/marca/sim-pin.png",
@@ -851,7 +869,13 @@ const SECTIONS = [
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => Array.from(document.querySelectorAll(s));
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const linkDe = (p) => (p.linkBot && p.linkBot.trim()) ? p.linkBot : CONFIG.botTelegram;
+const linkBase = (p) => (p.linkBot && p.linkBot.trim()) ? p.linkBot : CONFIG.botTelegram;
+/* ?start=web_<sitio> sólo si está activado en CONFIG. Ver el aviso allí. */
+const conOrigen = (url, origen) =>
+  (CONFIG.analitica && CONFIG.analitica.marcarBoton && origen)
+    ? url + (url.indexOf("?") < 0 ? "?" : "&") + "start=web_" + origen
+    : url;
+const linkDe = (p, origen) => conOrigen(linkBase(p), origen);
 const menosMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ahorroDatos = !!(navigator.connection && navigator.connection.saveData);
 
@@ -889,6 +913,38 @@ STATS.lineas = SECTIONS.length;
 
 const TG = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>';
 const MARCA = '<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>';
+
+/* ---------- medición ---------- *
+   Un solo punto de salida. Si no hay proveedor configurado no viaja
+   nada; el evento igual se emite en la página por si querés
+   engancharle otra cosa después sin tocar este archivo. */
+let gcCargado = false;
+function medir(evento, detalle) {
+  try {
+    dispatchEvent(new CustomEvent("tonyshop:medir", {detail: {evento, detalle}}));
+    const cod = CONFIG.analitica && CONFIG.analitica.goatcounter;
+    if (!cod) return;
+    if (!gcCargado) {
+      gcCargado = true;
+      window.goatcounter = {no_onload: true};
+      const sc = document.createElement("script");
+      sc.async = true;
+      sc.dataset.goatcounter = `https://${cod}.goatcounter.com/count`;
+      sc.src = "https://gc.zgo.at/count.js";
+      document.head.appendChild(sc);
+      /* la visita se cuenta en cuanto carga el contador */
+      sc.addEventListener("load", () => {
+        if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({path: location.pathname});
+      });
+    }
+    const enviar = () => {
+      if (window.goatcounter && window.goatcounter.count) {
+        window.goatcounter.count({path: detalle ? `${evento}/${detalle}` : evento, title: evento, event: true});
+      }
+    };
+    window.goatcounter && window.goatcounter.count ? enviar() : setTimeout(enviar, 1200);
+  } catch (e) {}
+}
 
 const nombreDe = (p, si) => p.nombre || SECTIONS[si].titulo;
 function etiquetaMedia(m) {
@@ -929,6 +985,7 @@ function alternarGuardado(i, btn) {
   btn.setAttribute("aria-pressed", GUARDADOS.has(k));
   btn.classList.remove("late"); void btn.offsetWidth; btn.classList.add("late");
   pintarGuardados();
+  medir("guardar", GUARDADOS.has(k) ? "on" : "off");
   if (soloGuardados) render();
 }
 function pintarGuardados() {
@@ -972,7 +1029,7 @@ function render() {
           <h4 class="ficha-nom">${esc(nom)}</h4>
           ${p.precio ? `<span class="plaza"><i></i><b>${esc(p.precio)}</b></span>` : ""}
           <span class="gana"><i>✓</i><span>${esc(p.caracteristicas[0])}</span></span>
-          <a class="btn btn-1 btn-sm" href="${esc(linkDe(p))}" target="_blank" rel="noopener">
+          <a class="btn btn-1 btn-sm" href="${esc(linkDe(p, "ficha"))}" data-cta="ficha" target="_blank" rel="noopener">
             ${TG}<span>${esc(CONFIG.cta.comprar)}</span>
           </a>
         </div>
@@ -1178,7 +1235,8 @@ function pintarVisor() {
   $("#visorSub").textContent = `${SECTIONS[si].titulo} · ${vPos + 1}/${p.media.length}`;
   $("#visorPieNom").textContent = nom;
   $("#visorPieSub").textContent = p.precio || etiquetaMedia(p.media);
-  $("#visorCta").href = linkDe(p);
+  $("#visorCta").href = linkDe(p, "visor");
+  $("#visorCta").dataset.cta = "visor";
   $("#visorCta").innerHTML = TG + "<span>" + esc(p.precio ? p.precio + " · Comprar" : CONFIG.cta.comprar) + "</span>";
   $("#visorHueco").textContent = cur ? (cur.tipo === "video" ? "video" : "foto") : "";
   $("#visorSon").hidden = !cur || cur.tipo !== "video";
@@ -1312,14 +1370,16 @@ T("pie", `© ${new Date().getFullYear()} TonyShop — ${esc(CONFIG.pie)} · <a h
 
 /* --- navegación y CTAs --- */
 T("navLinks", SECTIONS.map((s) => `<a href="#linea-${esc(s.id)}">${esc(s.titulo)}</a>`).join(""));
-[["ctaNav", CONFIG.cta.comprar], ["ctaHero1", CONFIG.cta.comprar],
- ["ctaFinal1", CONFIG.cta.comprar], ["ctaMovil", CONFIG.cta.comprar]].forEach(([id, txt]) => {
-  const n = document.getElementById(id);
-  n.href = CONFIG.botTelegram;
-  n.innerHTML = TG + "<span>" + esc(txt) + "</span>";
-});
+[["ctaNav", "nav"], ["ctaHero1", "hero"], ["ctaFinal1", "cierre"], ["ctaMovil", "movil"]]
+  .forEach(([id, origen]) => {
+    const n = document.getElementById(id);
+    n.href = conOrigen(CONFIG.botTelegram, origen);
+    n.dataset.cta = origen;
+    n.innerHTML = TG + "<span>" + esc(CONFIG.cta.comprar) + "</span>";
+  });
 $("#ctaHero2").textContent = CONFIG.cta.catalogo;
 $("#ctaFinal2").href = CONFIG.hubTelegram;
+$("#ctaFinal2").dataset.cta = "canal";
 $("#ctaFinal2").textContent = CONFIG.cta.hub;
 
 /* --- puerta de edad --- */
@@ -1346,6 +1406,7 @@ const PKEY = "tonyshop:edad";
 pintarGuardados();
 render();
 observar();
+medir("visita");
 
 /* --- navbar: opaca al bajar, marca la línea visible --- */
 const alScroll = () => {
@@ -1361,6 +1422,29 @@ addEventListener("scroll", alScroll, {passive: true});
 alScroll();
 
 /* --- eventos --- */
+/* Un único oyente en todo el documento: no hace falta reenganchar
+   nada cuando el catálogo se vuelve a pintar. */
+document.addEventListener("click", (e) => {
+  const b = e.target.closest("[data-cta]");
+  if (b) medir("comprar", b.dataset.cta);
+});
+
+/* Profundidad de scroll: dice si la gente llega abajo o abandona. */
+(function profundidad() {
+  const hitos = [25, 50, 75, 90];
+  const vistos = new Set();
+  const mirar = () => {
+    const alto = document.documentElement.scrollHeight - innerHeight;
+    if (alto <= 0) return;
+    const pct = Math.round((scrollY / alto) * 100);
+    hitos.forEach((h) => {
+      if (pct >= h && !vistos.has(h)) { vistos.add(h); medir("scroll", h + "%"); }
+    });
+    if (vistos.size === hitos.length) removeEventListener("scroll", mirar);
+  };
+  addEventListener("scroll", mirar, {passive: true});
+})();
+
 $("#q").addEventListener("input", render);
 $("#chipGuardados").addEventListener("click", () => {
   soloGuardados = !soloGuardados;
@@ -1373,7 +1457,7 @@ $("#listado").addEventListener("click", (e) => {
   const g = e.target.closest("[data-guardar]");
   if (g) { alternarGuardado(Number(g.dataset.guardar), g); return; }
   const a = e.target.closest("[data-abrir]");
-  if (a) abrirDesde(Number(a.dataset.abrir), a);
+  if (a) { medir("ver_muestra"); abrirDesde(Number(a.dataset.abrir), a); }
 });
 $("#listado").addEventListener("keydown", (e) => {
   if (e.key !== "Enter" && e.key !== " ") return;
