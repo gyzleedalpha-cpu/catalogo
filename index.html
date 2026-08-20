@@ -717,7 +717,10 @@ const CONFIG = {
      navegador. Añade fricción a propósito: es un sitio +18 y las
      pasarelas de pago lo miran. */
   puerta: {
-    activa: true,
+    /* DESACTIVADA TEMPORALMENTE a peticion tuya (2026-08-20) para
+       poder probar cosas sin la pantalla de por medio.
+       Para volver a encenderla: poner activa: true. Nada mas. */
+    activa: false,
     titulo: "Contenido para mayores de 18",
     texto: "Este sitio contiene material explícito. Al entrar confirmás que tenés 18 años o más.",
     si: "Tengo 18 o más — entrar",
@@ -738,19 +741,25 @@ const CONFIG = {
    Ojo: en GitHub Pages las mayúsculas importan (.mp4 ≠ .MP4).
    ============================================================ */
 
-/* Los nombres van en minúscula (.jpg / .mp4) porque GitHub Pages
-   distingue mayúsculas. En macOS no se nota, en packsmx.com sí.
+/* TODO en minúscula (.jpg / .mp4).
 
-   Varios videos están subidos como .MP4 y el catálogo los pedía en
-   minúscula: p9 a p12 (Elopicante entera) y 6 videos de Blackhub
-   daban 404 en producción y la tarjeta salía vacía. El cuarto
-   argumento lista qué videos van en MAYÚSCULA. Además abajo hay una
-   red de seguridad que reintenta con el otro caso, para que la
-   próxima subida no vuelva a romper la página en silencio. */
-const media = (p, nFotos, nVideos, mayus = []) => [
+   Ojo con esto, que ya me confundió una vez: en el disco de la Mac
+   algunos videos se ven como .MP4, pero el repositorio los tiene en
+   minúscula y GitHub Pages sirve lo del repositorio. macOS no distingue
+   mayúsculas, así que git nunca registró el cambio de caja.
+
+   La fuente de verdad NO es `ls` en la Mac: es `git ls-tree HEAD` o
+   pedirle el archivo al sitio publicado. Comprobado el 2026-08-20:
+   https://packsmx.com/img/p9/video1.mp4 -> 200
+   https://packsmx.com/img/p9/video1.MP4 -> 404 */
+const media = (p, nFotos, nVideos) => [
   ...Array.from({length:nFotos},  (_, i) => ({tipo:"imagen", src:`img/${p}/foto${i+1}.jpg`})),
   ...Array.from({length:nVideos}, (_, i) => ({tipo:"video",
-    src:`img/${p}/video${i+1}.${mayus.includes(i+1) ? "MP4" : "mp4"}`}))
+    src:`img/${p}/video${i+1}.mp4`,
+    /* Portada extraída del propio video (img/posters/). Sin ella el
+       navegador tiene que descargar el video para pintar un fotograma,
+       y eso costaba 8 MB en la primera pantalla. */
+    poster:`img/posters/${p}-video${i+1}.jpg`}))
 ];
 
 const F_INMEDIATA = ["Entrega inmediata", "Soporte por Telegram"];
@@ -788,16 +797,16 @@ const SECTIONS = [
     productos: [
       { nombre: "Castings +18/-18", precio: "", linkBot: "",
         descripcion: "Descripción del producto 5.", caracteristicas: F_INMEDIATA,
-        media: media("p5", 0, 4, [3,4]) },
+        media: media("p5", 0, 4) },
       { nombre: "Dormidas", precio: "", linkBot: "",
         descripcion: "Descripción del producto 6.", caracteristicas: F_INMEDIATA,
         media: media("p6", 0, 4) },
       { nombre: "Prostitutas", precio: "", linkBot: "",
         descripcion: "Descripción del producto 7.", caracteristicas: F_INMEDIATA,
-        media: media("p7", 0, 3, [1,2]) },
+        media: media("p7", 0, 3) },
       { nombre: "OmeTV", precio: "", linkBot: "",
         descripcion: "Descripción del producto 8.", caracteristicas: F_INMEDIATA,
-        media: media("p8", 0, 4, [2,3]) }
+        media: media("p8", 0, 4) }
     ]
   },
   {
@@ -824,16 +833,16 @@ const SECTIONS = [
     productos: [
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 9.", caracteristicas: F_INMEDIATA,
-        media: media("p9", 0, 1, [1]) },
+        media: media("p9", 0, 1) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 10.", caracteristicas: F_INMEDIATA,
-        media: media("p10", 0, 1, [1]) },
+        media: media("p10", 0, 1) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 11.", caracteristicas: F_INMEDIATA,
-        media: media("p11", 0, 1, [1]) },
+        media: media("p11", 0, 1) },
       { nombre: "", precio: "", linkBot: "",
         descripcion: "Descripción del producto 12.", caracteristicas: F_INMEDIATA,
-        media: media("p12", 0, 1, [1]) }
+        media: media("p12", 0, 1) }
     ]
   }
 ];
@@ -895,7 +904,10 @@ function portada(p, alt) {
   if (foto) return `<img src="${esc(foto.src)}" alt="${esc(alt)}" loading="lazy" decoding="async">`;
   const v = p.media[0];
   if (!v) return "";
-  return `<video src="${esc(v.src)}#t=0.1" muted loop playsinline preload="metadata" tabindex="-1" aria-label="${esc(alt)}"></video>`;
+  /* El fotograma lo pone el poster, no el video: preload="none" y sin
+     fragmento #t, así el archivo no se toca hasta que se reproduce. */
+  return `<video src="${esc(v.src)}" poster="${esc(v.poster || "")}" muted loop playsinline
+    preload="none" tabindex="-1" aria-label="${esc(alt)}"></video>`;
 }
 
 /* ---------- guardados ---------- *
@@ -1018,21 +1030,39 @@ const obsRv = new IntersectionObserver((es) => {
 /* Sólo se reproduce lo que está de verdad a la vista. Con 32 videos
    sueltos, dejarlos todos corriendo arrastra cualquier teléfono; y
    con ahorro de datos activado no se reproduce ninguno. */
+/* Sólo se reproduce UNA portada: la más visible. Antes corría todo lo
+   que cruzara el 55% y, en una pantalla ancha, eran tres o cuatro
+   videos bajando datos a la vez. */
+const vistos = new Map();
 const obsVid = new IntersectionObserver((es) => {
   es.forEach((e) => {
-    const v = e.target.querySelector("video");
-    if (!v) return;
-    if (e.isIntersecting && e.intersectionRatio > .55) {
-      v.muted = true;
-      const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
-      e.target.classList.add("viva");
-    } else { v.pause(); e.target.classList.remove("viva"); }
+    if (e.isIntersecting) vistos.set(e.target, e.intersectionRatio);
+    else vistos.delete(e.target);
   });
-}, {threshold: [0, .55]});
+  let mejor = null, top = 0;
+  vistos.forEach((r, ficha) => { if (r > top) { top = r; mejor = ficha; } });
+  $$(".ficha.viva").forEach((f) => {
+    if (f === mejor) return;
+    const v = f.querySelector("video"); if (v) v.pause();
+    f.classList.remove("viva");
+  });
+  if (mejor && top > .5) {
+    const v = mejor.querySelector("video");
+    if (v) {
+      v.muted = true;
+      if (v.preload === "none") v.preload = "metadata";
+      const pr = v.play(); if (pr && pr.catch) pr.catch(() => {});
+      mejor.classList.add("viva");
+    }
+  }
+}, {threshold: [0, .25, .5, .75, 1]});
 
 function observar() {
   $$(".rv:not(.on)").forEach((el) => obsRv.observe(el));
-  if (!menosMov && !ahorroDatos) $$(".ficha").forEach((el) => { if (el.querySelector("video")) obsVid.observe(el); });
+  $$(".ficha").forEach((el) => {
+    if (!el.querySelector("video")) return;
+    if (!menosMov && !ahorroDatos) obsVid.observe(el);
+  });
   if (!menosMov && matchMedia("(hover:hover)").matches) {
     $$(".lienzo").forEach(scrub);
     $$(".btn-1").forEach(iman);
@@ -1165,7 +1195,7 @@ function pintarVisor() {
      negras cuando el video es vertical y la caja no. */
   const fondo = document.createElement(cur.tipo === "video" ? "video" : "img");
   fondo.className = "visor-fondo";
-  fondo.src = cur.src + (cur.tipo === "video" ? "#t=0.1" : "");
+  fondo.src = cur.tipo === "video" ? (cur.poster || cur.src) : cur.src;
   fondo.setAttribute("aria-hidden", "true");
   if (cur.tipo === "video") { fondo.muted = true; fondo.playsInline = true; fondo.preload = "metadata"; }
   $("#visorTela").insertBefore(fondo, $("#visorPrev"));
@@ -1266,13 +1296,12 @@ T("muestraTitulo", CONFIG.muestra.titulo);
 T("muestraSub", esc(CONFIG.muestra.sub));
 $("#ctaMuestra").textContent = CONFIG.cta.catalogo;
 (function tira() {
-  const fotos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "imagen").map((m) => m.src));
-  const videos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "video").map((m) => m.src));
-  const lista = fotos.concat(videos.slice(0, 6));
+  /* Sólo fotos. Antes la tira metía también videos y, al duplicarse
+     para el desfile, sumaba doce <video> pidiendo metadatos en la
+     primera pantalla. Con 25 fotos sobra para llenar la banda. */
+  const lista = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "imagen").map((m) => m.src));
   if (!lista.length) return;
-  const uno = (src, i) => src.endsWith(".jpg")
-    ? `<span class="muestra-it"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></span>`
-    : `<span class="muestra-it"><video src="${esc(src)}#t=0.1" muted playsinline preload="metadata" tabindex="-1"></video></span>`;
+  const uno = (src) => `<span class="muestra-it"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></span>`;
   T("muestraTira", lista.map(uno).join("") + lista.map(uno).join(""));
 })();
 
