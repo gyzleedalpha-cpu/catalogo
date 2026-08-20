@@ -715,7 +715,20 @@ const CONFIG = {
        ponerlo en true. */
   analitica: {
     goatcounter: "tonyshop",
-    marcarBoton: false
+    /* Sólo se marcan los bots de esta lista, y sólo los que se hayan
+       probado a mano escribiéndoles "/start prueba" y comprobando que
+       siguen respondiendo. Un bot que compare el mensaje con "/start"
+       exacto deja de contestar con un parámetro detrás, y eso no mide
+       ventas: las mata.
+
+       TonyShoppbot     probado el 2026-08-20, responde normal.
+       tonyexclusivebot SIN PROBAR — por eso no está en la lista.
+
+       OJO: para que esto sirva de algo, el bot tiene que GUARDAR el
+       texto que llega después de /start. Si no lo guarda, los enlaces
+       llevan la marca pero nadie la anota. */
+    marcarBoton: true,
+    botsProbados: ["TonyShoppbot"]
   },
 
   /* Sello de cada línea. Cambiar el archivo cambia el símbolo. */
@@ -871,10 +884,17 @@ const $$ = (s) => Array.from(document.querySelectorAll(s));
 const esc = (s) => String(s).replace(/[&<>"']/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const linkBase = (p) => (p.linkBot && p.linkBot.trim()) ? p.linkBot : CONFIG.botTelegram;
 /* ?start=web_<sitio> sólo si está activado en CONFIG. Ver el aviso allí. */
-const conOrigen = (url, origen) =>
-  (CONFIG.analitica && CONFIG.analitica.marcarBoton && origen)
-    ? url + (url.indexOf("?") < 0 ? "?" : "&") + "start=web_" + origen
-    : url;
+const conOrigen = (url, origen) => {
+  const a = CONFIG.analitica;
+  if (!a || !a.marcarBoton || !origen) return url;
+  /* Sólo bots de la lista de probados. Uno sin probar se deja intacto:
+     vale más perder la atribución de esa línea que arriesgar que el bot
+     deje de responder. */
+  const quien = (url.match(/t\.me\/([A-Za-z0-9_]+)/) || [])[1];
+  const ok = (a.botsProbados || []).some((b) => b.toLowerCase() === String(quien).toLowerCase());
+  if (!ok) return url;
+  return url + (url.indexOf("?") < 0 ? "?" : "&") + "start=web_" + origen;
+};
 const linkDe = (p, origen) => conOrigen(linkBase(p), origen);
 const menosMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ahorroDatos = !!(navigator.connection && navigator.connection.saveData);
