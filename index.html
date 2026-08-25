@@ -721,8 +721,21 @@ const CONFIG = {
        exacto deja de contestar con un parámetro detrás, y eso no mide
        ventas: las mata.
 
-       TonyShoppbot     probado el 2026-08-20, responde normal.
-       tonyexclusivebot SIN PROBAR — por eso no está en la lista.
+       TonyShoppbot      probado el 2026-08-20, responde normal.
+       TonyExclusivobot  puesto el 2026-08-25. OJO con el nombre: son DOS
+                         bots distintos y se parecen mucho.
+                           tonyexclusivebot  -> "TonyExclusive"  (con E)
+                           TonyExclusivobot  -> "TonyExclusivo"  (con O)
+                         Hasta hoy estos 4 botones apuntaban al de la E,
+                         que es el equivocado. El bueno es el de la O.
+                         No fiarse del código HTTP para distinguirlos:
+                         t.me responde 200 aunque el usuario no exista.
+                         Se comprueba mirando el título de la página.
+
+                         Su código (caro-bot) sí lee context.args y lo
+                         guarda, así que admite la marca de seguimiento.
+                         Aun así se deja fuera de botsProbados hasta
+                         verlo contestar a mano en Telegram.
 
        OJO: para que esto sirva de algo, el bot tiene que GUARDAR el
        texto que llega después de /start. Si no lo guarda, los enlaces
@@ -844,16 +857,16 @@ const SECTIONS = [
     id: "tonyexclusive", titulo: "TonyExclusive",
     kicker: "Contenido exclusivo alojado fuera de Telegram • Acceso de por vida • Un solo pago",
     productos: [
-      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+      { nombre: "", precio: "", linkBot: "https://t.me/TonyExclusivobot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
         caracteristicas: F_EXCLUSIVE, media: media("p13", 0, 1) },
-      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+      { nombre: "", precio: "", linkBot: "https://t.me/TonyExclusivobot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
         caracteristicas: F_EXCLUSIVE, media: media("p14", 0, 1) },
-      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+      { nombre: "", precio: "", linkBot: "https://t.me/TonyExclusivobot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
         caracteristicas: F_EXCLUSIVE, media: media("p15", 0, 1) },
-      { nombre: "", precio: "", linkBot: "https://t.me/tonyexclusivebot",
+      { nombre: "", precio: "", linkBot: "https://t.me/TonyExclusivobot",
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago.",
         caracteristicas: F_EXCLUSIVE, media: media("p16", 0, 1) }
     ]
