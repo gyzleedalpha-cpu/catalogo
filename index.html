@@ -117,6 +117,15 @@ img,video{display:block;max-width:100%}
 .nav-links a{color:var(--gris);font-size:.85rem;font-weight:700;padding:9px 13px;border-radius:8px;white-space:nowrap;transition:color .18s,background .18s}
 .nav-links a:hover,.nav-links a.act{color:var(--papel);background:var(--tinta3)}
 .crecer{flex:1}
+/* Cambio de idioma. Discreto: es una utilidad, no una llamada a la
+   acción — no debe competir con el botón de comprar. */
+.idioma{flex:0 0 auto;display:flex;align-items:center;gap:6px;
+  border:1px solid var(--linea2);border-radius:8px;padding:8px 11px;
+  font-size:.76rem;font-weight:800;letter-spacing:.08em;color:var(--gris);
+  transition:color .2s,border-color .2s}
+.idioma:hover{color:var(--papel);border-color:var(--gris2)}
+.idioma b{color:var(--oro);font-weight:800}
+@media(max-width:860px){.idioma{margin-left:auto}}
 
 /* ---------- hero ---------- */
 .hero{position:relative;min-height:clamp(600px,92vh,940px);display:flex;align-items:center;overflow:hidden;border-bottom:1px solid var(--linea)}
@@ -490,6 +499,7 @@ img,video{display:block;max-width:100%}
     </a>
     <nav class="nav-links" id="navLinks" aria-label="Secciones"></nav>
     <span class="crecer"></span>
+    <button class="idioma" id="idioma" type="button" aria-label="Language"></button>
     <a class="btn btn-1 btn-sm" id="ctaNav" target="_blank" rel="noopener"></a>
   </div>
 </header>
@@ -524,7 +534,7 @@ img,video{display:block;max-width:100%}
     <div class="muestra-tira" id="muestraTira" aria-hidden="true"></div>
     <div class="muestra-velo" aria-hidden="true"></div>
     <div class="muestra-txt rv">
-      <span class="num">01 — La muestra</span>
+      <span class="num" id="numMuestra">01 — La muestra</span>
       <h2 id="muestraTitulo"></h2>
       <p id="muestraSub"></p>
       <a class="btn btn-1" href="#catalogo" id="ctaMuestra"></a>
@@ -535,7 +545,7 @@ img,video{display:block;max-width:100%}
   <section class="blq" id="lineas">
     <div class="blq-cab rv">
       <div>
-        <span class="num">02 — Líneas</span>
+        <span class="num" id="numLineas">02 — Líneas</span>
         <h2 id="catsTitulo"></h2>
       </div>
       <span class="crecer"></span>
@@ -548,7 +558,7 @@ img,video{display:block;max-width:100%}
   <section class="blq" id="catalogo" style="padding-top:0">
     <div class="blq-cab rv">
       <div>
-        <span class="num">03 — Catálogo</span>
+        <span class="num" id="numCatalogo">03 — Catálogo</span>
         <h2 id="catTitulo"></h2>
       </div>
       <span class="crecer"></span>
@@ -562,15 +572,15 @@ img,video{display:block;max-width:100%}
       </div>
       <button class="chip" id="chipGuardados" type="button" hidden>
         <svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>
-        <span>Guardados</span><b id="nGuardados"></b>
+        <span id="txtGuardados">Guardados</span><b id="nGuardados"></b>
       </button>
       <span class="cta-n" id="cuentaTotal"></span>
     </div>
 
     <div id="listado"></div>
     <div class="vacio" id="vacio" hidden>
-      <b>Nada con ese nombre</b>
-      <span>Probá con otra plaza.</span>
+      <b id="vacioTit">Nada con ese nombre</b>
+      <span id="vacioSub">Probá con otra plaza.</span>
     </div>
   </section>
 
@@ -583,7 +593,7 @@ img,video{display:block;max-width:100%}
   <section class="blq" id="faq">
     <div class="blq-cab rv">
       <div>
-        <span class="num">04 — Antes de comprar</span>
+        <span class="num" id="numFaq">04 — Antes de comprar</span>
         <h2 id="faqTitulo"></h2>
       </div>
     </div>
@@ -779,6 +789,147 @@ const CONFIG = {
 
   pie: "Compra segura vía Telegram"
 };
+
+/* ============================================================
+   IDIOMA — español por defecto, inglés a un toque.
+
+   El español es la fuente de verdad: se escribe una sola vez, en
+   CONFIG y en SECTIONS. El inglés es este diccionario. Si a una
+   frase le falta traducción, sale en español en vez de romperse,
+   así que se puede ir completando poco a poco.
+
+   Para añadir o corregir una traducción: busca la frase en español
+   y edita su línea. Nada más.
+   ============================================================ */
+const TRAD = {
+  /* --- botones --- */
+  "Comprar por Telegram": "Buy on Telegram",
+  "Ver el catálogo": "See the catalog",
+  "Entrar al canal": "Join the channel",
+  "Comprar": "Buy",
+
+  /* --- hero --- */
+  "Entrega automática · Bot 24/7": "Automatic delivery · Bot 24/7",
+  "Eliges.<br>Pagas.<br><em>Entras.</em>": "Pick.<br>Pay.<br><em>You\u2019re in.</em>",
+  "El bot te entrega el acceso en cuanto se confirma el pago. Sin esperas, sin formularios, sin hablar con nadie.":
+    "The bot hands you access the moment your payment clears. No waiting, no forms, no talking to anyone.",
+  "accesos": "items", "líneas": "lines", "fotos": "photos", "videos": "videos",
+  "Accesos": "Items", "Líneas": "Lines",
+  "Fotos de muestra": "Sample photos", "Videos de muestra": "Sample videos",
+
+  /* --- muestra --- */
+  "01 — La muestra": "01 — The sample",
+  "Mirás antes de <em>pagar</em>.": "You look before you <em>pay</em>.",
+  "Las muestras están abiertas en el catálogo. No hay registro, no hay correo, no hay formulario.":
+    "Samples are open in the catalog. No sign-up, no email, no forms.",
+
+  /* --- líneas --- */
+  "02 — Líneas": "02 — Lines",
+  "Cuatro <em>líneas</em>. Elegí la tuya.": "Four <em>lines</em>. Pick yours.",
+  "Cada línea es un tipo de acceso distinto. Tocá una para ver todo lo que tiene adentro.":
+    "Each line is a different kind of access. Tap one to see everything inside.",
+
+  /* --- catálogo --- */
+  "03 — Catálogo": "03 — Catalog",
+  "Todo lo que hay <em>hoy</em>": "Everything available <em>today</em>",
+  "Tocá cualquier portada para ver la muestra completa antes de comprar.":
+    "Tap any cover to see the full sample before you buy.",
+  "Buscar plaza o nombre…": "Search by name or state…",
+  "Guardados": "Saved",
+  "Nada con ese nombre": "Nothing by that name",
+  "Probá con otra plaza.": "Try another search.",
+  "acceso": "item", "producto": "item", "productos": "items",
+
+  /* --- beneficios --- */
+  "Acceso inmediato": "Instant access",
+  "El bot entrega apenas se confirma el pago. No hay cola ni horario.":
+    "The bot delivers as soon as payment clears. No queue, no opening hours.",
+  "Reposición incluida": "Replacement included",
+  "Si un acceso deja de funcionar, se repone sin costo.":
+    "If an access stops working, it gets replaced at no cost.",
+  "Fuera de Telegram": "Outside Telegram",
+  "TonyExclusive vive fuera del grupo: si el grupo cae, tu acceso sigue vivo.":
+    "TonyExclusive lives outside the group: if the group goes down, your access stays alive.",
+  "Soporte directo": "Direct support",
+  "Escribís al mismo bot y te contesta una persona.":
+    "Message the same bot and a real person answers.",
+
+  /* --- faq --- */
+  "04 — Antes de comprar": "04 — Before you buy",
+  "Las <em>dudas</em> de siempre": "The usual <em>questions</em>",
+  "¿Cómo me llega el acceso?": "How do I get access?",
+  "Tocás comprar, se abre el bot de Telegram y ahí se hace todo. En cuanto se confirma el pago, el bot entrega el acceso automáticamente.":
+    "You tap buy, the Telegram bot opens and everything happens there. As soon as payment clears, the bot delivers access automatically.",
+  "¿Tengo que pagar todos los meses?": "Do I have to pay every month?",
+  "En TonyExclusive no: es un pago único con acceso de por vida. No hay mensualidad ni renovación.":
+    "Not with TonyExclusive: one payment, lifetime access. No monthly fee, no renewal.",
+  "¿Y si el grupo de Telegram se cae?": "What if the Telegram group goes down?",
+  "El material de TonyExclusive está alojado fuera de Telegram. Por eso el acceso sobrevive aunque el grupo desaparezca.":
+    "TonyExclusive material is hosted outside Telegram. That is why your access survives even if the group disappears.",
+  "¿Qué pasa si algo no funciona?": "What if something stops working?",
+  "Hay reposición sin costo. Escribís al bot y se resuelve por ahí mismo.":
+    "Replacement is free. Message the bot and it gets sorted right there.",
+  "¿Dónde se paga?": "Where do I pay?",
+  "Dentro de Telegram, en el mismo bot. No salís de la app y no cargás datos en ninguna web.":
+    "Inside Telegram, in the same bot. You never leave the app and never enter details on a website.",
+
+  /* --- cierre y pie --- */
+  "No hay nada que llenar.<br>Sólo <em>entrar</em>.": "Nothing to fill in.<br>Just <em>come in</em>.",
+  "Abrís el bot, elegís y ya está adentro.": "Open the bot, pick, and you are in.",
+  "Compra segura vía Telegram": "Secure checkout via Telegram",
+  "Canal oficial": "Official channel",
+
+  /* --- puerta de edad --- */
+  "Contenido para mayores de 18": "18+ content",
+  "Este sitio contiene material explícito. Al entrar confirmás que tenés 18 años o más.":
+    "This site contains explicit material. By entering you confirm you are 18 or older.",
+  "Tengo 18 o más — entrar": "I am 18 or older — enter",
+  "Salir": "Leave",
+  "Al continuar aceptás ver contenido para adultos. Si sos menor de edad, salí de este sitio.":
+    "By continuing you agree to view adult content. If you are under 18, leave this site.",
+
+  /* --- líneas del catálogo --- *
+     Los nombres de marca no se traducen (Blackhub, TonyExclusive,
+     Elopicante) ni los de persona ni las plazas mexicanas. */
+  "Packs filtrados de los 32 estados de la República Mexicana":
+    "Leaked packs from all 32 states of Mexico",
+  "Contenido exclusivo alojado fuera de Telegram • Acceso de por vida • Un solo pago":
+    "Exclusive content hosted outside Telegram • Lifetime access • One single payment",
+  "Todos los videos del podcast #1 +18": "Every video from the #1 adult podcast",
+  "Castings +18/-18": "Castings 18+/under-18",
+  "Dormidas": "Sleeping",
+  "Prostitutas": "Sex workers",
+
+  /* --- características de producto --- */
+  "Entrega inmediata": "Instant delivery",
+  "Soporte por Telegram": "Support on Telegram",
+  "Alojado fuera de Telegram": "Hosted outside Telegram",
+  "Garantía de por vida": "Lifetime guarantee",
+  "Pago único, sin mensualidades": "One payment, no subscription",
+  "Entrega automática e inmediata": "Automatic, instant delivery",
+  "Garantía de reposición": "Replacement guarantee",
+  "Soporte 24/7 por Telegram": "24/7 support on Telegram",
+  "Activación al momento": "Activated on the spot",
+  "Pago seguro dentro del bot": "Secure payment inside the bot",
+  "Calidad garantizada": "Guaranteed quality",
+  "Reposición sin costo": "Free replacement",
+  "Atención prioritaria": "Priority support",
+
+  /* --- cabecera / SEO --- */
+  "TonyShop — Acceso inmediato por Telegram": "TonyShop — Instant access on Telegram",
+  "Elige, paga en Telegram y el bot te da el acceso al momento. 16 accesos en 4 líneas. Sin esperas, sin mensualidades en TonyExclusive.":
+    "Pick, pay on Telegram and the bot gives you access instantly. 16 items across 4 lines. No waiting, no subscription on TonyExclusive."
+};
+
+/* Idioma elegido: lo guardado, si no el del navegador, si no español. */
+let IDIOMA = "es";
+try {
+  const g = localStorage.getItem("tonyshop:idioma");
+  IDIOMA = g || ((navigator.language || "es").toLowerCase().startsWith("en") ? "en" : "es");
+} catch (e) {}
+
+/* Traduce. Si falta la frase, devuelve el español: nunca queda hueco. */
+const tr = (t) => (IDIOMA === "en" && TRAD[t]) ? TRAD[t] : t;
 
 /* ============================================================
    DATOS — nombres, plazas, links y media.
@@ -982,8 +1133,8 @@ function medir(evento, detalle) {
 const nombreDe = (p, si) => p.nombre || SECTIONS[si].titulo;
 function etiquetaMedia(m) {
   const i = m.filter((x) => x.tipo === "imagen").length, v = m.length - i, t = [];
-  if (i) t.push(i + (i === 1 ? " foto" : " fotos"));
-  if (v) t.push(v + (v === 1 ? " video" : " videos"));
+  if (i) t.push(i + " " + tr(i === 1 ? "foto" : "fotos"));
+  if (v) t.push(v + " " + tr(v === 1 ? "video" : "videos"));
   return t.join(" · ");
 }
 /* Portada: primera foto; si es sólo video, el primer video con #t=0.1
@@ -1058,12 +1209,12 @@ function render() {
         <button class="marcador${guardado ? " on" : ""}" data-guardar="${i}" type="button"
                 aria-pressed="${guardado}" aria-label="Guardar ${esc(nom)}">${MARCA}</button>
         <div class="ficha-pie">
-          <span class="ficha-cat">${esc(s.titulo)}</span>
-          <h4 class="ficha-nom">${esc(nom)}</h4>
+          <span class="ficha-cat">${esc(tr(s.titulo))}</span>
+          <h4 class="ficha-nom">${esc(tr(nom))}</h4>
           ${p.precio ? `<span class="plaza"><i></i><b>${esc(p.precio)}</b></span>` : ""}
-          <span class="gana"><i>✓</i><span>${esc(p.caracteristicas[0])}</span></span>
+          <span class="gana"><i>✓</i><span>${esc(tr(p.caracteristicas[0]))}</span></span>
           <a class="btn btn-1 btn-sm" href="${esc(linkDe(p, "ficha"))}" data-cta="ficha" target="_blank" rel="noopener">
-            ${TG}<span>${esc(CONFIG.cta.comprar)}</span>
+            ${TG}<span>${esc(tr(CONFIG.cta.comprar))}</span>
           </a>
         </div>
       </article>`;
@@ -1071,17 +1222,17 @@ function render() {
 
     return `
       <div class="linea-sec rv">
-        <h3 id="linea-${esc(s.id)}">${esc(s.titulo)}</h3>
+        <h3 id="linea-${esc(s.id)}">${esc(tr(s.titulo))}</h3>
         <span class="rayita"></span>
-        <span class="cnt">${filas.length} ${filas.length === 1 ? "acceso" : "accesos"}</span>
+        <span class="cnt">${filas.length} ${tr(filas.length === 1 ? "acceso" : "accesos")}</span>
       </div>
-      <p class="linea-desc rv">${esc(s.kicker)}</p>
+      <p class="linea-desc rv">${esc(tr(s.kicker))}</p>
       <div class="rej">${fichas}</div>`;
   }).join("");
 
   $("#listado").innerHTML = html;
   $("#vacio").hidden = total > 0;
-  $("#cuentaTotal").textContent = total + (total === 1 ? " acceso" : " accesos");
+  $("#cuentaTotal").textContent = total + " " + tr(total === 1 ? "acceso" : "accesos");
   observar();
 }
 
@@ -1264,13 +1415,13 @@ function pintarVisor() {
   const nom = nombreDe(p, si);
 
   $("#visorSig").textContent = SECTIONS[si].titulo.charAt(0);
-  $("#visorNom").textContent = nom;
-  $("#visorSub").textContent = `${SECTIONS[si].titulo} · ${vPos + 1}/${p.media.length}`;
-  $("#visorPieNom").textContent = nom;
+  $("#visorNom").textContent = tr(nom);
+  $("#visorSub").textContent = `${tr(SECTIONS[si].titulo)} · ${vPos + 1}/${p.media.length}`;
+  $("#visorPieNom").textContent = tr(nom);
   $("#visorPieSub").textContent = p.precio || etiquetaMedia(p.media);
   $("#visorCta").href = linkDe(p, "visor");
   $("#visorCta").dataset.cta = "visor";
-  $("#visorCta").innerHTML = TG + "<span>" + esc(p.precio ? p.precio + " · Comprar" : CONFIG.cta.comprar) + "</span>";
+  $("#visorCta").innerHTML = TG + "<span>" + esc(p.precio ? p.precio + " · " + tr("Comprar") : tr(CONFIG.cta.comprar)) + "</span>";
   $("#visorHueco").textContent = cur ? (cur.tipo === "video" ? "video" : "foto") : "";
   $("#visorSon").hidden = !cur || cur.tipo !== "video";
   $("#visorSon").textContent = vSonido ? "🔊" : "🔇";
@@ -1316,20 +1467,96 @@ function pintarVisor() {
    ============================================================ */
 const T = (id, v) => { const n = document.getElementById(id); if (n) n.innerHTML = v; };
 
-/* --- hero --- */
-T("heroKicker", esc(CONFIG.hero.kicker));
-T("heroTitulo", CONFIG.hero.titulo);
-T("heroSub", esc(CONFIG.hero.sub));
-T("heroPie", [
-  [STATS.productos, "accesos"], [STATS.lineas, "líneas"],
-  [STATS.fotos, "fotos"], [STATS.videos, "videos"]
-].map(([n, t]) => `<div><b data-contar>${n}</b><span>${t}</span></div>`).join(""));
-/* el hero no espera al observer: está sobre la línea de flotación */
-setTimeout(() => $$("#heroPie [data-contar]").forEach(contar), 380);
+/* Todo lo que cambia con el idioma vive aquí dentro, para poder
+   volver a pintarlo sin recargar la página. */
+function pintarTextos() {
+  /* --- hero --- */
+  T("heroKicker", esc(tr(CONFIG.hero.kicker)));
+  T("heroTitulo", tr(CONFIG.hero.titulo));
+  T("heroSub", esc(tr(CONFIG.hero.sub)));
+  T("heroPie", [
+    [STATS.productos, "accesos"], [STATS.lineas, "líneas"],
+    [STATS.fotos, "fotos"], [STATS.videos, "videos"]
+  ].map(([n, t]) => `<div><b data-contar>${n}</b><span>${tr(t)}</span></div>`).join(""));
+  /* el hero no espera al observer: está sobre la línea de flotación */
+  setTimeout(() => $$("#heroPie [data-contar]").forEach(contar), 380);
 
-/* --- mosaico del hero: el material real, no un render --- *
-   Se repiten pocas fotos distintas a propósito: el navegador las
-   cachea y el hero pesa lo que pesan 6 imágenes, no 18. */
+  /* --- mosaico del hero: el material real, no un render --- *
+     Se repiten pocas fotos distintas a propósito: el navegador las
+     cachea y el hero pesa lo que pesan 6 imágenes, no 18. */
+
+  /* --- cinta de datos --- */
+  T("cintaIn", [
+    [STATS.productos, "Accesos"], [STATS.lineas, "Líneas"],
+    [STATS.fotos, "Fotos de muestra"], [STATS.videos, "Videos de muestra"]
+  ].map(([n, t]) => `<div class="cinta-it rv"><b data-contar>${n}</b><span>${tr(t)}</span></div>`).join(""));
+
+  /* --- líneas --- */
+  T("catsTitulo", tr(CONFIG.lineas.titulo));
+  T("catsSub", esc(tr(CONFIG.lineas.sub)));
+  T("cats", SECTIONS.map((s) => {
+    const p = s.productos[0];
+    const sello = CONFIG.sellos[s.id];
+    return `<a class="cat rv" href="#linea-${esc(s.id)}">
+      <span class="cat-med">${portada(p, s.titulo)}</span>
+      <span class="cat-velo"></span>
+      ${sello ? `<span class="cat-sello"><img src="${esc(sello)}" alt="" loading="lazy"></span>` : ""}
+      <span class="cat-n">${s.productos.length} ${tr(s.productos.length === 1 ? "acceso" : "accesos")}</span>
+      <span class="cat-txt"><h3>${esc(tr(s.titulo))}</h3><p>${esc(tr(s.kicker))}</p></span>
+    </a>`;
+  }).join(""));
+
+  /* --- catálogo --- */
+  T("catTitulo", tr(CONFIG.catalogo.titulo));
+  T("catSub", esc(tr(CONFIG.catalogo.sub)));
+
+  /* --- beneficios --- */
+  T("porqueRej", CONFIG.porque.map((b) =>
+    `<div class="porque-it rv"><span class="ico"><img src="${esc(b.ico)}" alt="" loading="lazy"></span><b>${esc(tr(b.t))}</b><p>${esc(tr(b.d))}</p></div>`
+  ).join(""));
+
+  /* --- faq --- */
+  T("faqTitulo", tr(CONFIG.faq.titulo));
+  T("faqLista", CONFIG.faq.items.map((f, i) => `
+    <div class="faq-it rv">
+      <button class="faq-q" type="button" data-faq="${i}" aria-expanded="false" aria-controls="faq-a-${i}">
+        <span>${esc(tr(f.q))}</span><span class="mas" aria-hidden="true"></span>
+      </button>
+      <div class="faq-a" id="faq-a-${i}"><div><p>${esc(tr(f.a))}</p></div></div>
+    </div>`).join(""));
+
+  /* --- banda de muestra: tus fotos reales, censuradas --- *
+     Se duplica la lista para que el desfile sea continuo. Sólo se usan
+     fotos ya presentes en el catálogo, nada generado. */
+  T("muestraTitulo", tr(CONFIG.muestra.titulo));
+  T("muestraSub", esc(tr(CONFIG.muestra.sub)));
+  $("#ctaMuestra").textContent = tr(CONFIG.cta.catalogo);
+
+  /* --- cierre y pie --- */
+  T("cierreTitulo", tr(CONFIG.cierre.titulo));
+  T("cierreSub", esc(tr(CONFIG.cierre.sub)));
+  T("pie", `© ${new Date().getFullYear()} TonyShop — ${esc(tr(CONFIG.pie))} · <a href="${esc(CONFIG.hubTelegram)}" target="_blank" rel="noopener">${esc(tr("Canal oficial"))}</a>`);
+
+  /* --- navegación y CTAs --- */
+  T("navLinks", SECTIONS.map((s) => `<a href="#linea-${esc(s.id)}">${esc(tr(s.titulo))}</a>`).join(""));
+  [["ctaNav", "nav"], ["ctaHero1", "hero"], ["ctaFinal1", "cierre"], ["ctaMovil", "movil"]]
+    .forEach(([id, origen]) => {
+      const n = document.getElementById(id);
+      n.href = conOrigen(CONFIG.botTelegram, origen);
+      n.dataset.cta = origen;
+      n.innerHTML = TG + "<span>" + esc(tr(CONFIG.cta.comprar)) + "</span>";
+    });
+  $("#ctaHero2").textContent = tr(CONFIG.cta.catalogo);
+  $("#ctaFinal2").href = CONFIG.hubTelegram;
+  $("#ctaFinal2").dataset.cta = "canal";
+  $("#ctaFinal2").textContent = tr(CONFIG.cta.hub);
+
+}
+
+pintarTextos();
+
+/* Estos dos arman media a partir de SECTIONS: no dependen del
+   idioma, así que se ejecutan una sola vez. */
 (function mosaico() {
   const fotos = FLAT.flatMap(({p}) => p.media.filter((m) => m.tipo === "imagen").map((m) => m.src));
   if (!fotos.length) return;
@@ -1340,52 +1567,6 @@ setTimeout(() => $$("#heroPie [data-contar]").forEach(contar), 380);
   ).join(""));
 })();
 
-/* --- cinta de datos --- */
-T("cintaIn", [
-  [STATS.productos, "Accesos"], [STATS.lineas, "Líneas"],
-  [STATS.fotos, "Fotos de muestra"], [STATS.videos, "Videos de muestra"]
-].map(([n, t]) => `<div class="cinta-it rv"><b data-contar>${n}</b><span>${t}</span></div>`).join(""));
-
-/* --- líneas --- */
-T("catsTitulo", CONFIG.lineas.titulo);
-T("catsSub", esc(CONFIG.lineas.sub));
-T("cats", SECTIONS.map((s) => {
-  const p = s.productos[0];
-  const sello = CONFIG.sellos[s.id];
-  return `<a class="cat rv" href="#linea-${esc(s.id)}">
-    <span class="cat-med">${portada(p, s.titulo)}</span>
-    <span class="cat-velo"></span>
-    ${sello ? `<span class="cat-sello"><img src="${esc(sello)}" alt="" loading="lazy"></span>` : ""}
-    <span class="cat-n">${s.productos.length} ${s.productos.length === 1 ? "acceso" : "accesos"}</span>
-    <span class="cat-txt"><h3>${esc(s.titulo)}</h3><p>${esc(s.kicker)}</p></span>
-  </a>`;
-}).join(""));
-
-/* --- catálogo --- */
-T("catTitulo", CONFIG.catalogo.titulo);
-T("catSub", esc(CONFIG.catalogo.sub));
-
-/* --- beneficios --- */
-T("porqueRej", CONFIG.porque.map((b) =>
-  `<div class="porque-it rv"><span class="ico"><img src="${esc(b.ico)}" alt="" loading="lazy"></span><b>${esc(b.t)}</b><p>${esc(b.d)}</p></div>`
-).join(""));
-
-/* --- faq --- */
-T("faqTitulo", CONFIG.faq.titulo);
-T("faqLista", CONFIG.faq.items.map((f, i) => `
-  <div class="faq-it rv">
-    <button class="faq-q" type="button" data-faq="${i}" aria-expanded="false" aria-controls="faq-a-${i}">
-      <span>${esc(f.q)}</span><span class="mas" aria-hidden="true"></span>
-    </button>
-    <div class="faq-a" id="faq-a-${i}"><div><p>${esc(f.a)}</p></div></div>
-  </div>`).join(""));
-
-/* --- banda de muestra: tus fotos reales, censuradas --- *
-   Se duplica la lista para que el desfile sea continuo. Sólo se usan
-   fotos ya presentes en el catálogo, nada generado. */
-T("muestraTitulo", CONFIG.muestra.titulo);
-T("muestraSub", esc(CONFIG.muestra.sub));
-$("#ctaMuestra").textContent = CONFIG.cta.catalogo;
 (function tira() {
   /* Sólo fotos. Antes la tira metía también videos y, al duplicarse
      para el desfile, sumaba doce <video> pidiendo metadatos en la
@@ -1395,26 +1576,6 @@ $("#ctaMuestra").textContent = CONFIG.cta.catalogo;
   const uno = (src) => `<span class="muestra-it"><img src="${esc(src)}" alt="" loading="lazy" decoding="async"></span>`;
   T("muestraTira", lista.map(uno).join("") + lista.map(uno).join(""));
 })();
-
-/* --- cierre y pie --- */
-T("cierreTitulo", CONFIG.cierre.titulo);
-T("cierreSub", esc(CONFIG.cierre.sub));
-T("pie", `© ${new Date().getFullYear()} TonyShop — ${esc(CONFIG.pie)} · <a href="${esc(CONFIG.hubTelegram)}" target="_blank" rel="noopener">Canal oficial</a>`);
-
-/* --- navegación y CTAs --- */
-T("navLinks", SECTIONS.map((s) => `<a href="#linea-${esc(s.id)}">${esc(s.titulo)}</a>`).join(""));
-[["ctaNav", "nav"], ["ctaHero1", "hero"], ["ctaFinal1", "cierre"], ["ctaMovil", "movil"]]
-  .forEach(([id, origen]) => {
-    const n = document.getElementById(id);
-    n.href = conOrigen(CONFIG.botTelegram, origen);
-    n.dataset.cta = origen;
-    n.innerHTML = TG + "<span>" + esc(CONFIG.cta.comprar) + "</span>";
-  });
-$("#ctaHero2").textContent = CONFIG.cta.catalogo;
-$("#ctaFinal2").href = CONFIG.hubTelegram;
-$("#ctaFinal2").dataset.cta = "canal";
-$("#ctaFinal2").textContent = CONFIG.cta.hub;
-
 /* --- puerta de edad --- */
 const PKEY = "tonyshop:edad";
 (function puerta() {
@@ -1422,11 +1583,11 @@ const PKEY = "tonyshop:edad";
   let ok = false;
   try { ok = localStorage.getItem(PKEY) === "1"; } catch (e) { ok = true; }
   if (!CONFIG.puerta.activa || ok) { el.remove(); return; }
-  T("puertaTit", esc(CONFIG.puerta.titulo));
-  T("puertaTxt", esc(CONFIG.puerta.texto));
-  T("puertaLegal", esc(CONFIG.puerta.legal));
-  $("#puertaSi").textContent = CONFIG.puerta.si;
-  $("#puertaNo").textContent = CONFIG.puerta.no;
+  T("puertaTit", esc(tr(CONFIG.puerta.titulo)));
+  T("puertaTxt", esc(tr(CONFIG.puerta.texto)));
+  T("puertaLegal", esc(tr(CONFIG.puerta.legal)));
+  $("#puertaSi").textContent = tr(CONFIG.puerta.si);
+  $("#puertaNo").textContent = tr(CONFIG.puerta.no);
   el.hidden = false;
   document.body.style.overflow = "hidden";
   $("#puertaSi").addEventListener("click", () => {
@@ -1436,10 +1597,52 @@ const PKEY = "tonyshop:edad";
   });
 })();
 
+pintarIdioma();
+$("#idioma").addEventListener("click", cambiarIdioma);
+
 pintarGuardados();
 render();
 observar();
 medir("visita");
+
+/* --- idioma --- *
+   Repinta lo que no se regenera solo. El catálogo, las líneas y el
+   visor ya salen traducidos porque pasan por tr() al pintarse; aquí
+   van los textos fijos del HTML y la cabecera. */
+function pintarIdioma() {
+  document.documentElement.lang = IDIOMA;
+  const fijos = {
+    numMuestra: "01 — La muestra", numLineas: "02 — Líneas",
+    numCatalogo: "03 — Catálogo", numFaq: "04 — Antes de comprar",
+    txtGuardados: "Guardados", vacioTit: "Nada con ese nombre",
+    vacioSub: "Probá con otra plaza."
+  };
+  Object.keys(fijos).forEach((id) => {
+    const n = document.getElementById(id);
+    if (n) n.textContent = tr(fijos[id]);
+  });
+  const q = $("#q");
+  if (q) q.placeholder = tr("Buscar plaza o nombre…");
+  document.title = tr("TonyShop — Acceso inmediato por Telegram");
+  const d = document.querySelector('meta[name="description"]');
+  if (d) d.content = tr("Elige, paga en Telegram y el bot te da el acceso al momento. 16 accesos en 4 líneas. Sin esperas, sin mensualidades en TonyExclusive.");
+  const b = $("#idioma");
+  /* Se muestra el idioma AL QUE SE VA, no en el que estás: un botón
+     que dice "EN" invita a tocarlo; uno que dice "ES" estando en
+     español no significa nada. */
+  if (b) b.innerHTML = IDIOMA === "es" ? '<b>EN</b> English' : '<b>ES</b> Español';
+}
+
+function cambiarIdioma() {
+  IDIOMA = IDIOMA === "es" ? "en" : "es";
+  try { localStorage.setItem("tonyshop:idioma", IDIOMA); } catch (e) {}
+  medir("idioma", IDIOMA);
+  pintarTextos();
+  pintarIdioma();
+  render();
+  observar();
+  $$(".rv").forEach((el) => el.classList.add("on"));
+}
 
 /* --- navbar: opaca al bajar, marca la línea visible --- */
 const alScroll = () => {
