@@ -267,6 +267,8 @@ img,video{display:block;max-width:100%}
 .plaza b{font-size:.74rem;font-weight:800;letter-spacing:.11em;text-transform:uppercase;color:var(--oro)}
 .gana{font-size:.83rem;color:#a8a194;line-height:1.5;display:flex;gap:8px}
 .gana i{color:var(--oro);font-style:normal;flex:0 0 auto}
+.ficha-desc{margin:0;font-size:.82rem;line-height:1.55;color:var(--gris)}
+.ficha-desc b{color:#c9c1b0;font-weight:800}
 .ficha .btn{margin-top:4px;width:100%}
 
 /* ---------- beneficios ---------- */
@@ -828,6 +830,18 @@ const TRAD = {
   /* --- líneas --- */
   "02 — Líneas": "02 — Lines",
   "Elegí tu <em>línea</em>.": "Pick your <em>line</em>.",
+
+  /* --- descripciones de ficha --- */
+  "Packs filtrados de todo México — los 32 estados, verificadas con su red social (FB/IG). Un pago, acceso permanente, entrega automática al confirmar.":
+    "Leaked packs from all of Mexico — all 32 states, verified against their social media (FB/IG). One payment, permanent access, automatic delivery on confirmation.",
+  "Castings reales, con y sin ropa. Es una de las categorías dentro de BlackHub: contenido real, sin actuación, que se actualiza seguido. Un pago, acceso permanente.":
+    "Real castings, clothed and not. One of the categories inside BlackHub: real content, no acting, updated often. One payment, permanent access.",
+  "Grabadas dormidas, sin que se enteren. Es una de las categorías dentro de BlackHub: contenido real, sin actuación, que se actualiza seguido. Un pago, acceso permanente.":
+    "Filmed asleep, without noticing. One of the categories inside BlackHub: real content, no acting, updated often. One payment, permanent access.",
+  "Prostitutas grabadas por sus propios clientes. Es una de las categorías dentro de BlackHub: contenido real, sin actuación, que se actualiza seguido. Un pago, acceso permanente.":
+    "Prostitutes filmed by their own clients. One of the categories inside BlackHub: real content, no acting, updated often. One payment, permanent access.",
+  "Capturas de OmeTV y Omegle. Es una de las categorías dentro de BlackHub: contenido real, sin actuación, que se actualiza seguido. Un pago, acceso permanente.":
+    "Captures from OmeTV and Omegle. One of the categories inside BlackHub: real content, no acting, updated often. One payment, permanent access.",
   "Cada línea es un tipo de acceso distinto. Tocá una para ver todo lo que tiene adentro.":
     "Each line is a different kind of access. Tap one to see everything inside.",
 
@@ -964,7 +978,7 @@ const F_INMEDIATA = ["Entrega inmediata", "Soporte por Telegram"];
 /* MX es UN acceso: se compra una vez y entran los 32 estados. Las 4
    fichas son muestras del mismo acceso, así que comparten descripción y
    se diferencian sólo por el nombre y el estado del chip. */
-const D_MX = "Muestra del VIP de México. Adentro están los packs de los 32 estados, cada una verificada con su red social (FB/IG). Un solo pago, acceso permanente, sin mensualidades — el bot te entrega el acceso apenas se confirma.";
+const D_MX = "Packs filtrados de todo México — los 32 estados, verificadas con su red social (FB/IG). Un pago, acceso permanente, entrega automática al confirmar.";
 const C_MX = ["Los 32 estados incluidos", "Verificadas con su red social", "Entrega automática e inmediata"];
 
 /* TonyExclusive: el argumento de venta no es la cantidad sino que el
@@ -1208,6 +1222,7 @@ function render() {
           <h4 class="ficha-nom">${esc(tr(nom))}</h4>
           ${p.precio ? `<span class="plaza"><i></i><b>${esc(p.precio)}</b></span>` : ""}
           <span class="gana"><i>✓</i><span>${esc(tr(p.caracteristicas[0]))}</span></span>
+          ${p.descripcion ? `<p class="ficha-desc">${p.precio ? `<b>${esc(p.precio.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase()))}.</b> ` : ""}${esc(tr(p.descripcion))}</p>` : ""}
           <a class="btn btn-1 btn-sm" href="${esc(linkDe(p, "ficha", s.bot))}" data-cta="ficha" target="_blank" rel="noopener">
             ${TG}<span>${esc(tr(CONFIG.cta.comprar))}</span>
           </a>
