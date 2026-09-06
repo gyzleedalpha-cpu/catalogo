@@ -966,7 +966,7 @@ const F_EXCLUSIVE = ["Alojado fuera de Telegram", "Garantía de por vida", "Pago
 
 const SECTIONS = [
   {
-    id: "catalogo-mx", titulo: "MX Filtradas",
+    id: "catalogo-mx", titulo: "MX Filtradas", bot: "MX",
     kicker: "Packs filtrados de los 32 estados de la República Mexicana",
     productos: [
       { nombre: "Alessa", precio: "DURANGO", linkBot: "",
@@ -987,7 +987,7 @@ const SECTIONS = [
     ]
   },
   {
-    id: "blackhub", titulo: "Blackhub",
+    id: "blackhub", titulo: "Blackhub", bot: "blackhub",
     kicker: "Colegialas • Voyeur • Cámaras • Espiadas • Dormidas • Teens • Descuidos • Baños • Hardcore • Omegle • OmeTV • Vestidores • Castings 🇲🇽🇵🇪🇧🇴🇻🇪🇦🇷🇧🇷 • Hoteles • Caseras • Castings -18 • Discord e-sex lives • Telegram lives • Sexmex • Brazzers",
     productos: [
       { nombre: "Castings +18/-18", precio: "", linkBot: "",
@@ -1021,24 +1021,6 @@ const SECTIONS = [
         descripcion: "Contenido exclusivo alojado fuera de Telegram. Acceso de por vida con un solo pago. $1,000 MXN (~60 USD).",
         caracteristicas: F_EXCLUSIVE, media: media("p16", 0, 1) }
     ]
-  },
-  {
-    id: "elopicante", titulo: "Elopicante",
-    kicker: "Todos los videos del podcast #1 +18",
-    productos: [
-      { nombre: "", precio: "", linkBot: "",
-        descripcion: "Descripción del producto 9.", caracteristicas: F_INMEDIATA,
-        media: media("p9", 0, 1) },
-      { nombre: "", precio: "", linkBot: "",
-        descripcion: "Descripción del producto 10.", caracteristicas: F_INMEDIATA,
-        media: media("p10", 0, 1) },
-      { nombre: "", precio: "", linkBot: "",
-        descripcion: "Descripción del producto 11.", caracteristicas: F_INMEDIATA,
-        media: media("p11", 0, 1) },
-      { nombre: "", precio: "", linkBot: "",
-        descripcion: "Descripción del producto 12.", caracteristicas: F_INMEDIATA,
-        media: media("p12", 0, 1) }
-    ]
   }
 ];
 
@@ -1059,7 +1041,11 @@ const conOrigen = (url, origen) => {
   if (!ok) return url;
   return url + (url.indexOf("?") < 0 ? "?" : "&") + "start=web_" + origen;
 };
-const linkDe = (p, origen) => conOrigen(linkBase(p), origen);
+/* origen = de qué botón salió (ficha/visor/hero…). bot = a qué producto
+   del bot principal rutear directo (?start=web_<origen>_<bot>), para que
+   el clic caiga en la ficha de ese producto y no en el catálogo general.
+   Sin bot (TonyExclusive, botones genéricos) queda como antes. */
+const linkDe = (p, origen, bot) => conOrigen(linkBase(p), bot ? origen + "_" + bot : origen);
 const menosMov = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const ahorroDatos = !!(navigator.connection && navigator.connection.saveData);
 
@@ -1213,7 +1199,7 @@ function render() {
           <h4 class="ficha-nom">${esc(tr(nom))}</h4>
           ${p.precio ? `<span class="plaza"><i></i><b>${esc(p.precio)}</b></span>` : ""}
           <span class="gana"><i>✓</i><span>${esc(tr(p.caracteristicas[0]))}</span></span>
-          <a class="btn btn-1 btn-sm" href="${esc(linkDe(p, "ficha"))}" data-cta="ficha" target="_blank" rel="noopener">
+          <a class="btn btn-1 btn-sm" href="${esc(linkDe(p, "ficha", s.bot))}" data-cta="ficha" target="_blank" rel="noopener">
             ${TG}<span>${esc(tr(CONFIG.cta.comprar))}</span>
           </a>
         </div>
@@ -1419,7 +1405,7 @@ function pintarVisor() {
   $("#visorSub").textContent = `${tr(SECTIONS[si].titulo)} · ${vPos + 1}/${p.media.length}`;
   $("#visorPieNom").textContent = tr(nom);
   $("#visorPieSub").textContent = p.precio || etiquetaMedia(p.media);
-  $("#visorCta").href = linkDe(p, "visor");
+  $("#visorCta").href = linkDe(p, "visor", SECTIONS[si].bot);
   $("#visorCta").dataset.cta = "visor";
   $("#visorCta").innerHTML = TG + "<span>" + esc(p.precio ? p.precio + " · " + tr("Comprar") : tr(CONFIG.cta.comprar)) + "</span>";
   $("#visorHueco").textContent = cur ? (cur.tipo === "video" ? "video" : "foto") : "";
